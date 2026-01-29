@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const hasFilters = preferredCountries.length > 0 || field;
 
             // Fetch from API
-            const response = await fetch(`https://study-abroad-app-1vfr.onrender.com/api/universities?${params.toString()}`);
+            const response = await fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities?${params.toString()}`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch universities');
@@ -151,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // ALWAYS load all universities as fallback, regardless of filter state
                 console.log('[API] Loading ALL universities as fallback');
-                const allResponse = await fetch(`https://study-abroad-app-1vfr.onrender.com/api/universities`);
+                const allResponse = await fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities`);
                 const allData = await allResponse.json();
                 console.log('[API] Fallback response:', allData);
 
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // Fetch each shortlisted university by ID
                 const promises = userData.shortlistedUniversities.map(id => {
                     console.log(`[Shortlist] Fetching university with ID: ${id}`);
-                    return fetch(`https://study-abroad-app-1vfr.onrender.com/api/universities/${id}`)
+                    return fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities/${id}`)
                         .then(res => res.json())
                         .then(data => {
                             console.log(`[Shortlist] API response for ${id}:`, data);

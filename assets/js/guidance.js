@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         try {
             // Fetch each locked university from the API
             const promises = userData.lockedUniversities.map(uniId => {
-                return fetch(`https://study-abroad-app-1vfr.onrender.com/api/universities/${uniId}`)
+                return fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities/${uniId}`)
                     .then(res => res.json())
                     .then(data => data.success ? data.university : null)
                     .catch(err => {

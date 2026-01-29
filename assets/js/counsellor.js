@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
             params.append('limit', '5');
 
             // Fetch from API
-            const response = await fetch(`https://study-abroad-app-1vfr.onrender.com/api/universities?${params.toString()}`);
+            const response = await fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities?${params.toString()}`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch universities');
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 fallbackParams.append('limit', '5');
 
-                const fallbackResponse = await fetch(`https://study-abroad-app-1vfr.onrender.com/api/universities?${fallbackParams.toString()}`);
+                const fallbackResponse = await fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities?${fallbackParams.toString()}`);
                 const fallbackData = await fallbackResponse.json();
 
                 if (fallbackData.success && fallbackData.universities.length > 0) {
