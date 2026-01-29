@@ -45,7 +45,8 @@ export default function DashboardPage() {
         return <div className="flex items-center justify-center min-h-screen text-primary"><Loader2 className="animate-spin" /></div>;
     }
 
-    const completionPercentage = profile?.isComplete ? 100 : (profile?.educationLevel ? 50 : 0);
+    const isComplete = profile?.profileComplete || profile?.isComplete;
+    const completionPercentage = isComplete ? 100 : (profile?.educationLevel ? 50 : 0);
     const intakeYear = profile?.intakeYear || '2026';
 
     return (
@@ -55,7 +56,7 @@ export default function DashboardPage() {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-                        <p className="text-muted-foreground">Welcome back, {user?.name}. Here's your study abroad roadmap for {intakeYear}.</p>
+                        <p className="text-muted-foreground">Welcome back, {user?.name || 'User'}. Here's your study abroad roadmap for {intakeYear}.</p>
                     </div>
                     <div className="flex gap-2">
                         <Button onClick={() => router.push('/counsellor')} variant="default" className="shadow-lg hover:shadow-xl transition-all">
@@ -72,12 +73,12 @@ export default function DashboardPage() {
                             <CheckCircle className="h-4 w-4 text-blue-500" />
                         </CardHeader>
                         <CardContent>
-                            <div className="text-2xl font-bold">{profile?.isComplete ? 'Complete' : 'In Progress'}</div>
+                            <div className="text-2xl font-bold">{isComplete ? 'Complete' : 'In Progress'}</div>
                             <p className="text-xs text-muted-foreground mt-1">{completionPercentage}% Complete</p>
                             <div className="h-2 w-full bg-muted mt-3 rounded-full overflow-hidden">
                                 <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: `${completionPercentage}%` }} />
                             </div>
-                            {!profile?.isComplete && (
+                            {!isComplete && (
                                 <Button variant="link" className="p-0 h-auto font-normal text-xs mt-2" onClick={() => router.push('/onboarding')}>
                                     Complete Profile <ArrowRight className="ml-1 w-3 h-3" />
                                 </Button>
@@ -119,27 +120,26 @@ export default function DashboardPage() {
                     <div className="md:col-span-2 space-y-6">
                         <h2 className="text-xl font-semibold">Recommended Actions</h2>
                         <div className="space-y-4">
-                            {[1].map((task) => (
-                                <Card key={task} className="hover:shadow-md transition-shadow cursor-pointer">
-                                    <CardContent className="p-4 flex items-center gap-4">
-                                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-100 text-red-600">
-                                            <AlertCircle size={16} />
-                                        </div>
-                                        <div className="flex-1">
-                                            <h4 className="font-medium">Complete Draft of Statement of Purpose</h4>
-                                            <p className="text-sm text-muted-foreground">AI Review pending</p>
-                                        </div>
-                                        <Button variant="ghost" size="sm">Start</Button>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                            {!profile?.isComplete && (
+                            {!isComplete && (
                                 <Card className="hover:shadow-md transition-shadow cursor-pointer border-dashed border-2">
                                     <CardContent className="p-4 flex items-center gap-4 justify-center text-muted-foreground" onClick={() => router.push('/onboarding')}>
-                                        Finish Onboarding to see more tasks
+                                        Finish Onboarding to see personalized tasks
                                     </CardContent>
                                 </Card>
                             )}
+
+                            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                                <CardContent className="p-4 flex items-center gap-4">
+                                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-red-100 text-red-600">
+                                        <AlertCircle size={16} />
+                                    </div>
+                                    <div className="flex-1">
+                                        <h4 className="font-medium">Complete Draft of Statement of Purpose</h4>
+                                        <p className="text-sm text-muted-foreground">AI Review pending</p>
+                                    </div>
+                                    <Button variant="ghost" size="sm">Start</Button>
+                                </CardContent>
+                            </Card>
                         </div>
                     </div>
 

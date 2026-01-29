@@ -27,12 +27,11 @@ export default function OnboardingPage() {
     // Form State
     const [formData, setFormData] = useState({
         educationLevel: '',
-        major: 'Computer Science', // default for now
+        degreeMajor: 'Computer Science', // aligned with schema
         gpa: '',
-        gpaScale: '4.0',
-        targetDegree: 'Master\'s',
+        intendedDegree: 'Master\'s', // aligned with schema
         intakeYear: '2027',
-        budget: '50000',
+        budgetRange: '50000', // aligned with schema
         preferredCountries: [] as string[],
         examScores: '',
     });
@@ -55,8 +54,8 @@ export default function OnboardingPage() {
             setLoading(true);
             const res = await updateProfile(userEmail, {
                 ...formData,
-                isComplete: true,
-                preferredCountries: formData.preferredCountries
+                profileComplete: true,
+                stage: 'discover'
             });
 
             if (res.success) {
@@ -150,33 +149,21 @@ export default function OnboardingPage() {
                                                 <label className="text-sm font-medium">Field of Study</label>
                                                 <Input
                                                     placeholder="e.g. Computer Science"
-                                                    value={formData.major}
-                                                    onChange={e => setFormData({ ...formData, major: e.target.value })}
+                                                    value={formData.degreeMajor}
+                                                    onChange={e => setFormData({ ...formData, degreeMajor: e.target.value })}
                                                     className="h-12 rounded-xl"
                                                 />
                                             </div>
 
-                                            <div className="grid grid-cols-2 gap-4">
+                                            <div className="grid grid-cols-1 gap-4">
                                                 <div className="grid gap-2">
                                                     <label className="text-sm font-medium">GPA</label>
                                                     <Input
-                                                        placeholder="e.g. 3.8"
+                                                        placeholder="e.g. 3.8 / 4.0"
                                                         value={formData.gpa}
                                                         onChange={e => setFormData({ ...formData, gpa: e.target.value })}
                                                         className="h-12 rounded-xl"
                                                     />
-                                                </div>
-                                                <div className="grid gap-2">
-                                                    <label className="text-sm font-medium">Scale</label>
-                                                    <select
-                                                        className="flex h-12 w-full rounded-xl border border-input bg-background px-3 py-2 text-sm"
-                                                        value={formData.gpaScale}
-                                                        onChange={(e) => setFormData({ ...formData, gpaScale: e.target.value })}
-                                                    >
-                                                        <option value="4.0">4.0 Scale</option>
-                                                        <option value="10.0">10.0 Scale</option>
-                                                        <option value="100">Percentage</option>
-                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -217,8 +204,8 @@ export default function OnboardingPage() {
                                                         type="number"
                                                         className="pl-10 h-12 rounded-xl"
                                                         placeholder="50000"
-                                                        value={formData.budget}
-                                                        onChange={e => setFormData({ ...formData, budget: e.target.value })}
+                                                        value={formData.budgetRange}
+                                                        onChange={e => setFormData({ ...formData, budgetRange: e.target.value })}
                                                     />
                                                 </div>
                                             </div>
@@ -257,14 +244,14 @@ export default function OnboardingPage() {
                                             <div className="flex justify-between items-center border-b pb-4">
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">Target</p>
-                                                    <p className="font-semibold">{formData.targetDegree} in {formData.major}</p>
+                                                    <p className="font-semibold">{formData.intendedDegree} in {formData.degreeMajor}</p>
                                                 </div>
                                                 <GraduationCap className="text-primary h-5 w-5" />
                                             </div>
                                             <div className="flex justify-between items-center border-b pb-4">
                                                 <div>
                                                     <p className="text-sm text-muted-foreground">Budget & Year</p>
-                                                    <p className="font-semibold">${formData.budget}/yr • {formData.intakeYear}</p>
+                                                    <p className="font-semibold">${formData.budgetRange}/yr • {formData.intakeYear}</p>
                                                 </div>
                                                 <DollarSign className="text-green-600 h-5 w-5" />
                                             </div>

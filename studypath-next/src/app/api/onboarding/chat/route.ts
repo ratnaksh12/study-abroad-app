@@ -74,17 +74,17 @@ export async function POST(req: NextRequest) {
         const isComplete = text.includes("PROFILE_COMPLETE");
 
         if (isComplete) {
-            // Persist completion to DB
+            // Persist completion to PostgreSQL
+            const prisma = (await import('@/lib/prisma')).default;
+
             // In a real app we'd get userId from session/token
-            // For prototype we'll use a mocked email or parse it from headers if available
-            // Here we just mock it since we don't have auth middleware yet in this route
-            // importing dynamically to avoid build time issues if db init runs at build
-            const { db } = await import('@/lib/db');
-            // Mock user for now or get from request body if passed
-            // For now, we update the first user found or a default 'test@example.com' 
-            // This is a prototype limitation fix
-            const userEmail = 'test@example.com'; // TOOD: Real auth
-            db.updateProfile(userEmail, { isComplete: true });
+            // For now, we use a fallback or find user by email if provided in body
+            const userEmail = 'test@example.com';
+
+            await prisma.user.update({
+                where: { email: userEmail },
+                data: { profileComplete: true }
+            });
         }
 
         return NextResponse.json({

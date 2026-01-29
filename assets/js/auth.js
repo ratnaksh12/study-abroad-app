@@ -71,13 +71,28 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Login form submission
-    loginForm.addEventListener('submit', function (e) {
+    loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
 
-        const userData = getUserData(email);
+        let userData = getUserData(email);
+
+        // If not found locally, check the cloud (For cross-browser persistence)
+        if (!userData) {
+            console.log('User not found locally, checking cloud...');
+            const remoteUser = await lookupUserRemote(email);
+            if (remoteUser) {
+                console.log('User found in cloud! Hydrating local cache...');
+                userData = remoteUser;
+                // Sync to local
+                const users = JSON.parse(localStorage.getItem('users') || '{}');
+                users[email] = userData;
+                localStorage.setItem('users', JSON.stringify(users));
+                localStorage.setItem('currentUID', userData.id);
+            }
+        }
 
         if (!userData) {
             alert('No account found with this email. Please sign up first.');
@@ -93,12 +108,6 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('currentUser', email);
 
         if (userData.profileComplete) {
-            // Mark that user has logged in (no longer first time)
-            // This happens after the first successful login to dashboard from onboarding
-            if (userData.firstLogin === true) {
-                userData.firstLogin = false;
-                saveUserData(email, userData);
-            }
             window.location.href = 'dashboard.html';
         } else {
             window.location.href = 'onboarding.html';
@@ -106,16 +115,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Signup form submission
-    signupForm.addEventListener('submit', function (e) {
+    signupForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
 
-        // Check if user already exists
-        if (getUserData(email)) {
+        // Check if user already exists (locally or remotely)
+        const localUser = getUserData(email);
+        if (localUser) {
             alert('An account with this email already exists. Please login.');
+            return;
+        }
+
+        const remoteUser = await lookupUserRemote(email);
+        if (remoteUser) {
+            alert('An account with this email already exists in our cloud. Please login.');
             return;
         }
 
@@ -125,16 +141,15 @@ document.addEventListener('DOMContentLoaded', function () {
             email: email,
             password: password,
             profileComplete: false,
-            firstLogin: true,
             createdAt: new Date().toISOString(),
             profile: {},
-            stage: 'profile',
             shortlistedUniversities: [],
             lockedUniversities: [],
             tasks: []
         };
 
-        saveUserData(email, newUser);
+        // Save to local and cloud
+        await saveUserData(email, newUser);
         localStorage.setItem('currentUser', email);
 
         // Redirect to onboarding
@@ -147,63 +162,43 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
             const email = user.email;
+            const uid = user.uid;
 
-            // Check if user already exists in local system
-            let userData = getUserData(email);
-
-            if (!userData) {
-                // New user - create profile automatically
-                const newName = user.displayName || email.split('@')[0];
-
-                userData = {
-                    name: newName,
+            // Sync with PostgreSQL Backend
+            const syncResponse = await fetch(`${API_BASE_URL}/user/sync`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: uid,
                     email: email,
-                    password: 'google_auth_user', // Placeholder, not used for Google Auth
-                    profileComplete: false,
-                    firstLogin: true,
-                    createdAt: new Date().toISOString(),
-                    profile: {},
-                    stage: 'profile',
-                    shortlistedUniversities: [],
-                    lockedUniversities: [],
-                    tasks: [],
-                    authProvider: 'google'
-                };
+                    name: user.displayName
+                })
+            });
 
-                saveUserData(email, userData);
+            const syncResult = await syncResponse.json();
 
-                // Set as current user
+            if (syncResult.success) {
+                // Set current user and UID
                 localStorage.setItem('currentUser', email);
+                localStorage.setItem('currentUID', uid);
 
-                // Redirect to onboarding
-                window.location.href = 'onboarding.html';
-            } else {
-                // Existing user - login
-                localStorage.setItem('currentUser', email);
+                const userData = syncResult.user;
 
                 if (userData.profileComplete) {
-                    if (userData.firstLogin === true) {
-                        userData.firstLogin = false;
-                        saveUserData(email, userData);
-                    }
                     window.location.href = 'dashboard.html';
                 } else {
                     window.location.href = 'onboarding.html';
                 }
+            } else {
+                throw new Error('Backend sync failed');
             }
 
         } catch (error) {
-            console.error("Google Sign-In Error:", error);
-            // Handle specific error codes if needed
-            let errorMessage = "Google Sign-In failed. Please try again.";
-            if (error.code === 'auth/popup-closed-by-user') {
-                errorMessage = "Sign-in cancelled.";
-            } else if (error.code === 'auth/invalid-api-key') {
-                errorMessage = "Invalid Firebase configuration. Please check the API key.";
-            }
-            alert(errorMessage);
+            console.error("Auth Error:", error);
+            alert("Authentication failed. Please try again.");
         }
     });
+
 
     // Forgot password flow
     const forgotPasswordModal = document.getElementById('forgotPasswordModal');

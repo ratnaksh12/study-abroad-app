@@ -25,7 +25,7 @@ model University {
 }
 
 model User {
-  id              String   @id // Firebase UID or CUID
+  id              String   @id // Firebase UID or generated ID
   email           String   @unique
   name            String?
   password        String?  // Added for custom auth sync
@@ -33,9 +33,11 @@ model User {
   stage           String   @default("profile")
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  
-  profile         Profile?
-  chatHistory     ChatMessage[]
+
+  // Profile data
+  profile Profile?
+
+  // Relationships
   shortlistedUnis UserUniversity[]
   tasks           Task[]
 }
@@ -94,13 +96,4 @@ model Task {
   completed   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-}
-
-model ChatMessage {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  role      String   // user, assistant
-  content   String
-  timestamp DateTime @default(now())
 }

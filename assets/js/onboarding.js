@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Complete onboarding
-    document.getElementById('completeOnboardingBtn').addEventListener('click', function () {
+    document.getElementById('completeOnboardingBtn').addEventListener('click', async function () {
         if (validateCurrentScreen()) {
             saveCurrentScreenData();
 
@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Generate initial tasks
             userData.tasks = generateInitialTasks(userData);
 
-            saveUserData(currentUserEmail, userData, { isProfileUpdate: true });
+            await saveUserData(currentUserEmail, userData, { isProfileUpdate: true });
 
             updateProgress(100);
 
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function () {
         chatMessages.scrollTop = chatMessages.scrollHeight;
     }
 
-    function processAIResponse(userMessage) {
+    async function processAIResponse(userMessage) {
         const step = conversationState.step;
 
         // Simple rule-based conversation flow
@@ -297,7 +297,9 @@ document.addEventListener('DOMContentLoaded', function () {
             userData.profileComplete = true;
             userData.stage = 'discover';
             userData.tasks = generateInitialTasks(userData);
-            saveUserData(currentUserEmail, userData, { isProfileUpdate: true });
+
+            // Sync and wait
+            await saveUserData(currentUserEmail, userData, { isProfileUpdate: true });
 
             addAIMessage("Awesome! Your profile is now complete. I've gathered all the information I need to help you find the perfect universities. Redirecting you to your dashboard...");
             updateProgress(100);
@@ -309,15 +311,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Send message
-    function sendMessage() {
+    async function sendMessage() {
         const message = chatInput.value.trim();
         if (!message) return;
 
         addUserMessage(message);
         chatInput.value = '';
 
-        setTimeout(() => {
-            processAIResponse(message);
+        setTimeout(async () => {
+            await processAIResponse(message);
         }, 800);
     }
 

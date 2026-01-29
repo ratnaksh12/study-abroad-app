@@ -1,5 +1,7 @@
 // Common JavaScript Functions - Shared Across All Pages
 
+const API_BASE_URL = 'https://study-abroad-app-ivfr.onrender.com/api';
+
 // Initialize localStorage if not exists
 function initializeLocalStorage() {
     if (!localStorage.getItem('users')) {
@@ -7,52 +9,113 @@ function initializeLocalStorage() {
     }
 }
 
-// Get user data from localStorage
+// Global cached user data
+let g_userData = null;
+
+// Get user data from backend (Async)
+async function fetchUserRemote(uid) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/${uid}`);
+        const result = await response.json();
+        if (result.success) {
+            g_userData = result.user;
+            // Sync to local as backup/cache
+            localStorage.setItem(`user_cache_${uid}`, JSON.stringify(g_userData));
+            return g_userData;
+        }
+    } catch (error) {
+        console.error('Error fetching user from backend:', error);
+        // Fallback to cache
+        const cache = localStorage.getItem(`user_cache_${uid}`);
+        if (cache) return JSON.parse(cache);
+    }
+    return null;
+}
+
+// Lookup user by email from backend
+async function lookupUserRemote(email) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/by-email/${email}`);
+        const result = await response.json();
+        if (result.success) {
+            return result.user;
+        }
+    } catch (error) {
+        console.error('Error looking up user remotely:', error);
+    }
+    return null;
+}
+
+// Sync user data to backend
+async function saveUserRemote(email, data) {
+    try {
+        const uid = localStorage.getItem('currentUID') || `user_${email.replace(/[.@]/g, '_')}`;
+
+        // Sync Base User Data (Id, Email, Name, Password)
+        await fetch(`${API_BASE_URL}/user/sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                uid: uid,
+                email: email,
+                name: data.name,
+                password: data.password
+            })
+        });
+
+        // Sync profile
+        if (data.profile) {
+            await fetch(`${API_BASE_URL}/user/${uid}/profile`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data.profile)
+            });
+        }
+
+        // Sync tasks
+        if (data.tasks) {
+            await fetch(`${API_BASE_URL}/user/${uid}/tasks`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tasks: data.tasks })
+            });
+        }
+
+        console.log('🔄 Data synced to PostgreSQL');
+    } catch (error) {
+        console.error('Error syncing to backend:', error);
+    }
+}
+
+// Get user data (legacy wrapper - returns cached or null)
 function getUserData(email) {
+    // If we have a global UID, we should use it. 
+    // This function is still used by auth.js for email lookup.
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     return users[email] || null;
 }
 
-// Save user data to localStorage  
-function saveUserData(email, data, options = {}) {
-    console.log(`[Global Save] Saving data for ${email}. Shortlist:`, data.shortlistedUniversities);
-    console.log(`[Global Save] Caller options:`, options);
-    // console.trace('Trace save call'); // Optional: uncomment if we need call stack
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    const oldUserData = users[email];
+// Save user data (Now pushes to cloud automatically)
+async function saveUserData(email, data, options = {}) {
+    console.log(`[Global Save] Saving data for ${email}.`);
 
-    // Auto-deduplicate shortlist before saving
+    // Auto-deduplicate shortlist
     if (data.shortlistedUniversities) {
         data.shortlistedUniversities = cleanShortlist(data.shortlistedUniversities);
     }
 
-    // Check if field of study changed - ONLY if this is a profile update
-    // Don't clear shortlist when just adding universities from chat
-    if (options.isProfileUpdate && oldUserData && data.profile && oldUserData.profile) {
-        const oldField = oldUserData.profile.fieldOfStudy;
-        const newField = data.profile.fieldOfStudy;
-
-        if (oldField && newField && oldField !== newField) {
-            // Field changed - clear shortlist
-            data.shortlistedUniversities = [];
-            data.shortlistField = newField;
-            console.log(`Field changed from "${oldField}" to "${newField}" - shortlist cleared`);
-        }
-    }
-
-    // Track current field with shortlist
-    if (data.profile && data.profile.fieldOfStudy && !data.shortlistField) {
-        data.shortlistField = data.profile.fieldOfStudy;
-    }
-
+    // Save to local
+    const users = JSON.parse(localStorage.getItem('users') || '{}');
     users[email] = data;
     localStorage.setItem('users', JSON.stringify(users));
+
+    // Remote sync
+    await saveUserRemote(email, data);
 }
 
 // Clean and deduplicate shortlist array
 function cleanShortlist(shortlistedIds) {
     if (!Array.isArray(shortlistedIds)) return [];
-    // Remove duplicates, null, undefined, and empty strings
     return [...new Set(shortlistedIds.filter(id => id && String(id).trim()))];
 }
 
@@ -61,6 +124,25 @@ function getCurrentUser() {
     const currentUser = localStorage.getItem('currentUser');
     if (!currentUser) return null;
     return getUserData(currentUser);
+}
+
+// Toggle University (Shortlist/Lock) with Remote Sync
+async function toggleUniversityRemote(universityId, action, isLocked = false) {
+    const uid = localStorage.getItem('currentUID');
+    if (!uid) return false;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/user/${uid}/universities`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ universityId, action, isLocked })
+        });
+        const result = await response.json();
+        return result.success;
+    } catch (error) {
+        console.error('Error toggling university remotely:', error);
+        return false;
+    }
 }
 
 // Check authentication and redirect if needed
@@ -72,6 +154,9 @@ function requireAuth() {
     }
     return true;
 }
+
+// ... (Rest of UI calculations: calculateProfileStrength, etc. remain unchanged)
+
 
 // Check if onboarding is complete
 function checkOnboardingComplete() {

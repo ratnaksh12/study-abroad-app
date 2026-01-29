@@ -1,71 +1,19 @@
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
+const { PrismaClient } = require('@prisma/client');
 
 const app = express();
+const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
-// Load university data
-const universitiesData = JSON.parse(
-    fs.readFileSync(path.join(__dirname, 'data', 'universities.json'), 'utf8')
-);
-
 // Helper function to normalize strings for comparison
 function normalize(str) {
     if (!str || typeof str !== 'string') return '';
     return str.toLowerCase().trim();
-}
-
-// Helper function to check if a university offers a program
-function offersProgram(university, fieldOfStudy) {
-    if (!fieldOfStudy) return true;
-
-    const normalizedField = normalize(fieldOfStudy);
-
-    // Map common field variations to database program names
-    const fieldMappings = {
-        'artificial intelligence': ['computer science', 'engineering'],
-        'ai': ['computer science', 'engineering'],
-        'machine learning': ['computer science', 'engineering'],
-        'ml': ['computer science', 'engineering'],
-        'data science': ['computer science', 'sciences'],
-        'software engineering': ['computer science', 'engineering'],
-        'computer engineering': ['computer science', 'engineering'],
-        'information technology': ['computer science', 'engineering'],
-        'it': ['computer science', 'engineering'],
-        'mba': ['business'],
-        'management': ['business'],
-        'finance': ['business'],
-        'accounting': ['business'],
-        'pre-med': ['medicine'],
-        'medical': ['medicine'],
-        'health': ['medicine'],
-        'legal studies': ['law'],
-        'humanities': ['arts'],
-        'liberal arts': ['arts'],
-        'natural sciences': ['sciences'],
-        'physics': ['sciences'],
-        'chemistry': ['sciences'],
-        'biology': ['sciences'],
-        'mathematics': ['sciences'],
-        'math': ['sciences']
-    };
-
-    // Get mapped programs or use original field
-    const searchTerms = fieldMappings[normalizedField] || [normalizedField];
-
-    // Check if university offers any of the search terms
-    return university.programs.some(program => {
-        const normalizedProgram = normalize(program);
-        return searchTerms.some(term =>
-            normalizedProgram.includes(term) || term.includes(normalizedProgram)
-        );
-    });
 }
 
 // Country name aliases
@@ -87,151 +35,310 @@ function normalizeCountry(country) {
 
 // API Routes
 
-// Get all universities
-app.get('/api/universities', (req, res) => {
-    let { country, field, limit } = req.query;
+// Get all universities with filtering
+app.get('/api/universities', async (req, res) => {
+    try {
+        let { country, field, limit } = req.query;
 
-    let filtered = universitiesData.universities;
+        // Build Prisma query filters
+        const where = {};
 
-    // Handle country parameter (can be string or array)
-    if (country) {
-        // Convert to array if single country
-        const countries = Array.isArray(country) ? country : [country];
-        const targetCountries = countries.map(c => normalizeCountry(c));
+        if (country) {
+            const countries = Array.isArray(country) ? country : [country];
+            const targetCountries = countries.map(c => normalizeCountry(c));
 
-        filtered = filtered.filter(uni => {
-            const uniCountry = normalize(uni.country);
-            return targetCountries.some(targetCountry =>
-                uniCountry === targetCountry ||
-                uniCountry.includes(targetCountry) ||
-                targetCountry.includes(uniCountry)
-            );
+            where.OR = targetCountries.map(c => ({
+                country: { contains: c, mode: 'insensitive' }
+            }));
+        }
+
+        if (field) {
+            where.programs = { hasSome: [field] };
+            // Note: Simplistic mapping for now, can be expanded like offersProgram if needed
+        }
+
+        const universities = await prisma.university.findMany({
+            where,
+            take: limit ? parseInt(limit) : undefined,
+            orderBy: { rankingQS: 'asc' }
         });
-    }
 
-    // Filter by field of study
-    if (field) {
-        filtered = filtered.filter(uni => offersProgram(uni, field));
+        res.json({
+            success: true,
+            count: universities.length,
+            universities
+        });
+    } catch (error) {
+        console.error('Error fetching universities:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
-
-    // Apply limit
-    if (limit) {
-        filtered = filtered.slice(0, parseInt(limit));
-    }
-
-    res.json({
-        success: true,
-        count: filtered.length,
-        universities: filtered
-    });
 });
 
 // Get university by ID
-app.get('/api/universities/:id', (req, res) => {
-    const university = universitiesData.universities.find(
-        uni => uni.id === req.params.id
-    );
-
-    if (!university) {
-        return res.status(404).json({
-            success: false,
-            message: 'University not found'
+app.get('/api/universities/:id', async (req, res) => {
+    try {
+        const university = await prisma.university.findUnique({
+            where: { id: req.params.id }
         });
+
+        if (!university) {
+            return res.status(404).json({
+                success: false,
+                message: 'University not found'
+            });
+        }
+
+        res.json({ success: true, university });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
-
-    res.json({
-        success: true,
-        university
-    });
 });
 
-// Get list of supported countries
-app.get('/api/countries', (req, res) => {
-    const countries = [...new Set(
-        universitiesData.universities.map(uni => uni.country)
-    )].sort();
+// Search universities (flexible POST)
+app.post('/api/universities/search', async (req, res) => {
+    try {
+        const { countries, fields, minRanking, maxTuition } = req.body;
 
-    res.json({
-        success: true,
-        count: countries.length,
-        countries
-    });
-});
+        const where = {};
 
-// Get list of all programs
-app.get('/api/programs', (req, res) => {
-    const programs = [...new Set(
-        universitiesData.universities.flatMap(uni => uni.programs)
-    )].sort();
+        if (countries && countries.length > 0) {
+            const targetCountries = countries.map(c => normalizeCountry(c));
+            where.OR = targetCountries.map(c => ({
+                country: { contains: c, mode: 'insensitive' }
+            }));
+        }
 
-    res.json({
-        success: true,
-        count: programs.length,
-        programs
-    });
-});
+        if (fields && fields.length > 0) {
+            where.programs = { hasSome: fields };
+        }
 
-// Search universities (more flexible)
-app.post('/api/universities/search', (req, res) => {
-    const { countries, fields, minRanking, maxTuition } = req.body;
+        if (minRanking) {
+            where.rankingQS = { lte: minRanking };
+        }
 
-    let filtered = universitiesData.universities;
+        if (maxTuition) {
+            where.tuitionUSD = { lte: maxTuition };
+        }
 
-    // Filter by countries (array)
-    if (countries && countries.length > 0) {
-        const normalizedCountries = countries.map(c => normalizeCountry(c));
-        filtered = filtered.filter(uni => {
-            const uniCountry = normalize(uni.country);
-            return normalizedCountries.some(targetCountry =>
-                uniCountry === targetCountry ||
-                uniCountry.includes(targetCountry) ||
-                targetCountry.includes(uniCountry)
-            );
+        const universities = await prisma.university.findMany({
+            where,
+            orderBy: { rankingQS: 'asc' }
         });
-    }
 
-    // Filter by fields (array)
-    if (fields && fields.length > 0) {
-        filtered = filtered.filter(uni =>
-            fields.some(field => offersProgram(uni, field))
-        );
+        res.json({
+            success: true,
+            count: universities.length,
+            universities
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
+});
 
-    // Filter by QS ranking
-    if (minRanking) {
-        filtered = filtered.filter(uni =>
-            uni.ranking.qs && uni.ranking.qs <= minRanking
-        );
+// --- User Management Routes ---
+
+// Sync user on login (Create if not exists)
+app.post('/api/user/sync', async (req, res) => {
+    try {
+        const { uid, email, name, password } = req.body;
+        if (!uid || !email) return res.status(400).json({ success: false, message: 'UID and email required' });
+
+        const user = await prisma.user.upsert({
+            where: { id: uid },
+            update: {
+                name,
+                email,
+                password: password || undefined // Only update if provided
+            },
+            create: {
+                id: uid,
+                email,
+                name,
+                password: password || null,
+                profile: { create: {} } // Create empty profile for new user
+            },
+            include: {
+                profile: true,
+                shortlistedUnis: { include: { university: true } },
+                tasks: true
+            }
+        });
+
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error('Error syncing user:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
+});
 
-    // Filter by tuition
-    if (maxTuition) {
-        filtered = filtered.filter(uni =>
-            uni.stats.tuitionUSD <= maxTuition
-        );
+// Get user by email (For cross-browser persistence)
+app.get('/api/user/by-email/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+        const user = await prisma.user.findUnique({
+            where: { email },
+            include: {
+                profile: true,
+                shortlistedUnis: { include: { university: true } },
+                tasks: true
+            }
+        });
+
+        if (!user) return res.json({ success: false, message: 'User not found' });
+
+        // Transform for consistency
+        const transformedUser = {
+            ...user,
+            shortlistedUniversities: user.shortlistedUnis.filter(u => !u.isLocked).map(u => u.universityId),
+            lockedUniversities: user.shortlistedUnis.filter(u => u.isLocked).map(u => u.universityId),
+            shortlistedDetails: user.shortlistedUnis.map(u => u.university)
+        };
+
+        res.json({ success: true, user: transformedUser });
+    } catch (error) {
+        console.error('Error looking up user by email:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
     }
+});
 
-    res.json({
-        success: true,
-        count: filtered.length,
-        universities: filtered
-    });
+// Get full user state
+app.get('/api/user/:uid', async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.params.uid },
+            include: {
+                profile: true,
+                shortlistedUnis: { include: { university: true } },
+                tasks: true
+            }
+        });
+
+        if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+        // Transform shortlistedUnis to flat array for frontend compatibility
+        const transformedUser = {
+            ...user,
+            shortlistedUniversities: user.shortlistedUnis.filter(u => !u.isLocked).map(u => u.universityId),
+            lockedUniversities: user.shortlistedUnis.filter(u => u.isLocked).map(u => u.universityId),
+            shortlistedDetails: user.shortlistedUnis.map(u => u.university)
+        };
+
+        res.json({ success: true, user: transformedUser });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Update Profile
+app.post('/api/user/:uid/profile', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const profileData = req.body;
+
+        const updatedProfile = await prisma.profile.update({
+            where: { userId: uid },
+            data: {
+                educationLevel: profileData.educationLevel,
+                degreeMajor: profileData.degreeMajor,
+                graduationYear: profileData.graduationYear,
+                gpa: profileData.gpa,
+                intendedDegree: profileData.intendedDegree,
+                fieldOfStudy: profileData.fieldOfStudy,
+                intakeYear: profileData.intakeYear,
+                intakeSeason: profileData.intakeSeason,
+                preferredCountries: profileData.preferredCountries,
+                budgetRange: profileData.budgetRange,
+                fundingPlan: profileData.fundingPlan,
+                englishTest: profileData.englishTest,
+                englishScore: profileData.englishScore,
+                standardizedTest: profileData.standardizedTest,
+                standardizedScore: profileData.standardizedScore,
+                sopStatus: profileData.sopStatus
+            }
+        });
+
+        // Update user profileComplete status
+        await prisma.user.update({
+            where: { id: uid },
+            data: { profileComplete: true }
+        });
+
+        res.json({ success: true, profile: updatedProfile });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Toggle Shortlist/Lock
+app.post('/api/user/:uid/universities', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const { universityId, action, isLocked } = req.body;
+
+        if (action === 'add') {
+            await prisma.userUniversity.upsert({
+                where: { userId_universityId: { userId: uid, universityId } },
+                update: { isLocked: isLocked || false },
+                create: { userId: uid, universityId, isLocked: isLocked || false }
+            });
+        } else if (action === 'remove') {
+            await prisma.userUniversity.delete({
+                where: { userId_universityId: { userId: uid, universityId } }
+            });
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Sync Tasks
+app.post('/api/user/:uid/tasks', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const { tasks } = req.body; // Array of tasks
+
+        for (const task of tasks) {
+            await prisma.task.upsert({
+                where: { id: task.id },
+                update: {
+                    completed: task.completed,
+                    title: task.title,
+                    description: task.description,
+                    priority: task.priority
+                },
+                create: {
+                    id: task.id,
+                    userId: uid,
+                    title: task.title,
+                    description: task.description,
+                    priority: task.priority,
+                    completed: task.completed
+                }
+            });
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
 });
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', async (req, res) => {
+    const uniCount = await prisma.university.count();
     res.json({
         status: 'ok',
-        message: 'University API is running',
-        totalUniversities: universitiesData.universities.length
+        message: 'University API with PostgreSQL is running',
+        totalUniversities: uniCount
     });
 });
 
 // Start server
-const HOST = '0.0.0.0'; // Important for cloud deployments
+const HOST = '0.0.0.0';
 app.listen(PORT, HOST, () => {
     console.log(`🎓 University API running on http://${HOST}:${PORT}`);
-    console.log(`📊 Loaded ${universitiesData.universities.length} universities`);
-    console.log(`🌍 Covering ${[...new Set(universitiesData.universities.map(u => u.country))].length} countries`);
 });
+
 
