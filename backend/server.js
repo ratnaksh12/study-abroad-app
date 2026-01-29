@@ -1,15 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
-require('dotenv').config();
-
-require('dotenv').config();
 
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
 
 console.log('🚀 Server starting...');
+console.log('Prisma Client Version:', require('@prisma/client/package.json').version);
 console.log('DATABASE_URL configured:', !!process.env.DATABASE_URL);
 
 // Test database connection on startup
