@@ -4,12 +4,27 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 
 const app = express();
-const prisma = new PrismaClient();
+// Explicitly pass the connection string to ensure it's picked up from process.env (loaded by dotenv)
+const prisma = new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL
+        }
+    }
+});
 const PORT = process.env.PORT || 3001;
 
 console.log('🚀 Server starting...');
-console.log('Prisma Client Version:', require('@prisma/client/package.json').version);
-console.log('DATABASE_URL configured:', !!process.env.DATABASE_URL);
+console.log('DATABASE_URL present in process.env:', !!process.env.DATABASE_URL);
+// Log only the hostname to be safe
+try {
+    if (process.env.DATABASE_URL) {
+        const url = new URL(process.env.DATABASE_URL);
+        console.log('Database Host:', url.hostname);
+    }
+} catch (e) {
+    console.log('Could not parse DATABASE_URL for logging');
+}
 
 // Test database connection on startup
 prisma.$connect()
@@ -331,6 +346,16 @@ app.get('/health', async (req, res) => {
 // Simple ping test (no DB)
 app.get('/ping', (req, res) => {
     res.json({ status: 'pong', timestamp: new Date().toISOString() });
+});
+
+// Environmental Diagnostic
+app.get('/env-check', (req, res) => {
+    res.json({
+        database_url_set: !!process.env.DATABASE_URL,
+        node_env: process.env.NODE_ENV,
+        port: process.env.PORT,
+        all_keys: Object.keys(process.env).filter(key => !key.toLowerCase().includes('password') && !key.toLowerCase().includes('secret') && !key.toLowerCase().includes('key'))
+    });
 });
 
 // Global error handler
