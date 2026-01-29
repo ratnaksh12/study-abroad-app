@@ -71,28 +71,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Login form submission
-    loginForm.addEventListener('submit', async function (e) {
+    loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
 
-        let userData = getUserData(email);
-
-        // If not found locally, check the cloud (For cross-browser persistence)
-        if (!userData) {
-            console.log('User not found locally, checking cloud...');
-            const remoteUser = await lookupUserRemote(email);
-            if (remoteUser) {
-                console.log('User found in cloud! Hydrating local cache...');
-                userData = remoteUser;
-                // Sync to local
-                const users = JSON.parse(localStorage.getItem('users') || '{}');
-                users[email] = userData;
-                localStorage.setItem('users', JSON.stringify(users));
-                localStorage.setItem('currentUID', userData.id);
-            }
-        }
+        const userData = getUserData(email);
 
         if (!userData) {
             alert('No account found with this email. Please sign up first.');
@@ -108,6 +93,12 @@ document.addEventListener('DOMContentLoaded', function () {
         localStorage.setItem('currentUser', email);
 
         if (userData.profileComplete) {
+            // Mark that user has logged in (no longer first time)
+            // This happens after the first successful login to dashboard from onboarding
+            if (userData.firstLogin === true) {
+                userData.firstLogin = false;
+                saveUserData(email, userData);
+            }
             window.location.href = 'dashboard.html';
         } else {
             window.location.href = 'onboarding.html';
@@ -115,23 +106,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Signup form submission
-    signupForm.addEventListener('submit', async function (e) {
+    signupForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
 
-        // Check if user already exists (locally or remotely)
-        const localUser = getUserData(email);
-        if (localUser) {
+        // Check if user already exists
+        if (getUserData(email)) {
             alert('An account with this email already exists. Please login.');
-            return;
-        }
-
-        const remoteUser = await lookupUserRemote(email);
-        if (remoteUser) {
-            alert('An account with this email already exists in our cloud. Please login.');
             return;
         }
 
@@ -141,15 +125,16 @@ document.addEventListener('DOMContentLoaded', function () {
             email: email,
             password: password,
             profileComplete: false,
+            firstLogin: true,
             createdAt: new Date().toISOString(),
             profile: {},
+            stage: 'profile',
             shortlistedUniversities: [],
             lockedUniversities: [],
             tasks: []
         };
 
-        // Save to local and cloud
-        await saveUserData(email, newUser);
+        saveUserData(email, newUser);
         localStorage.setItem('currentUser', email);
 
         // Redirect to onboarding

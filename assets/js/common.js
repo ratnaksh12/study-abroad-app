@@ -32,37 +32,9 @@ async function fetchUserRemote(uid) {
     return null;
 }
 
-// Lookup user by email from backend
-async function lookupUserRemote(email) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/user/by-email/${email}`);
-        const result = await response.json();
-        if (result.success) {
-            return result.user;
-        }
-    } catch (error) {
-        console.error('Error looking up user remotely:', error);
-    }
-    return null;
-}
-
 // Sync user data to backend
-async function saveUserRemote(email, data) {
+async function saveUserRemote(uid, data) {
     try {
-        const uid = localStorage.getItem('currentUID') || `user_${email.replace(/[.@]/g, '_')}`;
-
-        // Sync Base User Data (Id, Email, Name, Password)
-        await fetch(`${API_BASE_URL}/user/sync`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                uid: uid,
-                email: email,
-                name: data.name,
-                password: data.password
-            })
-        });
-
         // Sync profile
         if (data.profile) {
             await fetch(`${API_BASE_URL}/user/${uid}/profile`, {
@@ -70,6 +42,13 @@ async function saveUserRemote(email, data) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data.profile)
             });
+        }
+
+        // Sync shortlist/locks
+        // This is simplified - in production we'd delta sync
+        if (data.shortlistedUniversities || data.lockedUniversities) {
+            // Note: server endpoint handles one at a time or batch
+            // For now, we'll implement a simple batch sync if needed
         }
 
         // Sync tasks
@@ -95,7 +74,7 @@ function getUserData(email) {
     return users[email] || null;
 }
 
-// Save user data (Now pushes to cloud automatically)
+// Save user data (legacy wrapper - also triggers remote sync if uid present)
 async function saveUserData(email, data, options = {}) {
     console.log(`[Global Save] Saving data for ${email}.`);
 
@@ -104,13 +83,15 @@ async function saveUserData(email, data, options = {}) {
         data.shortlistedUniversities = cleanShortlist(data.shortlistedUniversities);
     }
 
-    // Save to local
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     users[email] = data;
     localStorage.setItem('users', JSON.stringify(users));
 
-    // Remote sync
-    await saveUserRemote(email, data);
+    // Remote sync if we have a UID stored
+    const uid = localStorage.getItem('currentUID');
+    if (uid) {
+        await saveUserRemote(uid, data);
+    }
 }
 
 // Clean and deduplicate shortlist array

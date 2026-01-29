@@ -140,21 +140,16 @@ app.post('/api/universities/search', async (req, res) => {
 // Sync user on login (Create if not exists)
 app.post('/api/user/sync', async (req, res) => {
     try {
-        const { uid, email, name, password } = req.body;
+        const { uid, email, name } = req.body;
         if (!uid || !email) return res.status(400).json({ success: false, message: 'UID and email required' });
 
         const user = await prisma.user.upsert({
             where: { id: uid },
-            update: {
-                name,
-                email,
-                password: password || undefined // Only update if provided
-            },
+            update: { name, email },
             create: {
                 id: uid,
                 email,
                 name,
-                password: password || null,
                 profile: { create: {} } // Create empty profile for new user
             },
             include: {
@@ -167,36 +162,6 @@ app.post('/api/user/sync', async (req, res) => {
         res.json({ success: true, user });
     } catch (error) {
         console.error('Error syncing user:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
-});
-
-// Get user by email (For cross-browser persistence)
-app.get('/api/user/by-email/:email', async (req, res) => {
-    try {
-        const { email } = req.params;
-        const user = await prisma.user.findUnique({
-            where: { email },
-            include: {
-                profile: true,
-                shortlistedUnis: { include: { university: true } },
-                tasks: true
-            }
-        });
-
-        if (!user) return res.json({ success: false, message: 'User not found' });
-
-        // Transform for consistency
-        const transformedUser = {
-            ...user,
-            shortlistedUniversities: user.shortlistedUnis.filter(u => !u.isLocked).map(u => u.universityId),
-            lockedUniversities: user.shortlistedUnis.filter(u => u.isLocked).map(u => u.universityId),
-            shortlistedDetails: user.shortlistedUnis.map(u => u.university)
-        };
-
-        res.json({ success: true, user: transformedUser });
-    } catch (error) {
-        console.error('Error looking up user by email:', error);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });

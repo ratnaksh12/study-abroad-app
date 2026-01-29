@@ -25,10 +25,9 @@ model University {
 }
 
 model User {
-  id              String   @id // Firebase UID or generated ID
+  id              String   @id // Firebase UID
   email           String   @unique
   name            String?
-  password        String?  // Added for custom auth sync
   profileComplete Boolean  @default(false)
   stage           String   @default("profile")
   createdAt       DateTime @default(now())
