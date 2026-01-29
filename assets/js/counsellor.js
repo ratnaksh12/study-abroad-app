@@ -380,8 +380,8 @@ document.addEventListener('DOMContentLoaded', function () {
             // Limit to 5 recommendations for chat
             params.append('limit', '5');
 
-            // Fetch from API
-            const response = await fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities?${params.toString()}`);
+            // Fetch from API - Using global API_BASE_URL
+            const response = await fetch(`${API_BASE_URL}/universities?${params.toString()}`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch universities');
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 fallbackParams.append('limit', '5');
 
-                const fallbackResponse = await fetch(`https://study-abroad-app-ivfr.onrender.com/api/universities?${fallbackParams.toString()}`);
+                const fallbackResponse = await fetch(`${API_BASE_URL}/universities?${fallbackParams.toString()}`);
                 const fallbackData = await fallbackResponse.json();
 
                 if (fallbackData.success && fallbackData.universities.length > 0) {
@@ -432,14 +432,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Transform API data to match chat format
+            // Transform API data to match chat format - Using Prisma field names
             return data.universities.map(uni => ({
                 id: uni.id,
                 name: uni.name,
                 country: uni.country,
-                category: determineCategoryByRanking(uni.ranking.qs),
-                reason: `Top-ranked for ${field || 'your field'} with ${uni.stats.internationalStudents} international students`,
-                acceptanceChance: uni.stats.acceptanceRate
+                category: determineCategoryByRanking(uni.rankingQS),
+                reason: `Top-ranked for ${field || 'your field'} with ${uni.internationalStudents} international students`,
+                acceptanceChance: uni.acceptanceRate
             }));
 
         } catch (error) {
@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 id: 'error',
                 name: 'Unable to load recommendations',
                 category: 'error',
-                reason: 'Please ensure the backend server is running on port 3001',
+                reason: 'Data synchronization issue with the backend server',
                 acceptanceChance: 'N/A'
             }];
         }
