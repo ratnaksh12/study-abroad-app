@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Profile - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/onboarding.css">
+</head>
+
+<body class="onboarding-body">
+    <div class="onboarding-container">
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Mode Selection Screen -->
+        <div class="onboarding-screen active" id="modeSelection">
+            <div class="screen-header">
+                <h2>Choose Your <span class="highlight">Onboarding Style</span></h2>
+                <p>Select how you'd like to build your profile</p>
+            </div>
+            <div class="mode-cards">
+                <div class="mode-card ripple" data-mode="form">
+                    <div class="mode-icon">
+                        <i class="fas fa-list-check"></i>
+                    </div>
+                    <h3>Step-by-Step Form</h3>
+                    <p>Fill out structured forms at your own pace</p>
+                    <div class="mode-badge">Traditional</div>
+                </div>
+                <div class="mode-card ripple" data-mode="ai">
+                    <div class="mode-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>AI Conversation</h3>
+                    <p>Chat with our AI to build your profile naturally</p>
+                    <div class="mode-badge mode-badge-ai">AI-Powered</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Mode Screens -->
+        <div class="onboarding-screen" id="academicBackground">
+            <div class="screen-header">
+                <h2>Academic <span class="highlight">Background</span></h2>
+                <p>Tell us about your education</p>
+            </div>
+            <form class="onboarding-form">
+                <div class="input-group">
+                    <label>Education Level</label>
+                    <select class="input-field" id="educationLevel" required>
+                        <option value="">Select level</option>
+                        <option value="highschool">High School</option>
+                        <option value="bachelors">Bachelor's Degree</option>
+                        <option value="masters">Master's Degree</option>
+                        <option value="phd">PhD</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Degree/Major</label>
+                    <input type="text" class="input-field" id="degreeMajor" placeholder="e.g., Computer Science"
+                        required>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Graduation Year</label>
+                        <input type="number" class="input-field" id="graduationYear" placeholder="2024" required>
+                    </div>
+                    <div class="input-group">
+                        <label>GPA (Optional)</label>
+                        <input type="text" class="input-field" id="gpa" placeholder="3.8/4.0">
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-block ripple next-btn" data-next="studyGoal">
+                    Continue
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+
+        <div class="onboarding-screen" id="studyGoal">
+            <div class="screen-header">
+                <h2>Study <span class="highlight">Goals</span></h2>
+                <p>What are you aiming for?</p>
+            </div>
+            <form class="onboarding-form">
+                <div class="input-group">
+                    <label>Intended Degree</label>
+                    <select class="input-field" id="intendedDegree" required>
+                        <option value="">Select degree</option>
+                        <option value="bachelors">Bachelor's</option>
+                        <option value="masters">Master's</option>
+                        <option value="phd">PhD</option>
+                        <option value="diploma">Diploma/Certificate</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Field of Study</label>
+                    <input type="text" class="input-field" id="fieldOfStudy" placeholder="e.g., Data Science, Business"
+                        required>
+                </div>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Intake Year</label>
+                        <select class="input-field" id="intakeYear" required>
+                            <option value="">Select year</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Intake Season</label>
+                        <select class="input-field" id="intakeSeason" required>
+                            <option value="">Select season</option>
+                            <option value="fall">Fall</option>
+                            <option value="spring">Spring</option>
+                            <option value="summer">Summer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Preferred Countries (Select multiple)</label>
+                    <div class="checkbox-group" id="countriesCheckboxGroup">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="countries" value="USA"> USA
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="countries" value="UK"> UK
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="countries" value="Canada"> Canada
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="countries" value="Australia"> Australia
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="countries" value="Germany"> Germany
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="countries" value="Other"> Other
+                        </label>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button type="button" class="btn btn-secondary ripple back-btn" data-back="academicBackground">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-primary ripple next-btn" data-next="budget">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="onboarding-screen" id="budget">
+            <div class="screen-header">
+                <h2>Budget & <span class="highlight">Funding</span></h2>
+                <p>Help us understand your financial planning</p>
+            </div>
+            <form class="onboarding-form">
+                <div class="input-group">
+                    <label>Yearly Budget Range (USD)</label>
+                    <select class="input-field" id="budgetRange" required>
+                        <option value="">Select range</option>
+                        <option value="0-10000">$0 - $10,000</option>
+                        <option value="10000-20000">$10,000 - $20,000</option>
+                        <option value="20000-30000">$20,000 - $30,000</option>
+                        <option value="30000-50000">$30,000 - $50,000</option>
+                        <option value="50000+">$50,000+</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Funding Plan (Select all that apply)</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="funding" value="self"> Self-Funded
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="funding" value="family"> Family Support
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="funding" value="scholarship"> Scholarship
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="funding" value="loan"> Education Loan
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="funding" value="other"> Other
+                        </label>
+                    </div>
+                </div>
+                <div class="btn-row">
+                    <button type="button" class="btn btn-secondary ripple back-btn" data-back="studyGoal">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-primary ripple next-btn" data-next="examsReadiness">
+                        Continue <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="onboarding-screen" id="examsReadiness">
+            <div class="screen-header">
+                <h2>Exams & <span class="highlight">Readiness</span></h2>
+                <p>Track your test preparation status</p>
+            </div>
+            <form class="onboarding-form">
+                <div class="input-group">
+                    <label>English Proficiency Test</label>
+                    <select class="input-field" id="englishTest">
+                        <option value="">Select test</option>
+                        <option value="ielts">IELTS</option>
+                        <option value="toefl">TOEFL</option>
+                        <option value="pte">PTE</option>
+                        <option value="none">Not taken yet</option>
+                    </select>
+                </div>
+                <div class="input-group" id="englishScoreGroup">
+                    <label>Score (if taken)</label>
+                    <input type="text" class="input-field" id="englishScore" placeholder="e.g., 7.5 or 110">
+                </div>
+                <div class="input-group">
+                    <label>Standardized Test</label>
+                    <select class="input-field" id="standardizedTest">
+                        <option value="">Select test</option>
+                        <option value="gre">GRE</option>
+                        <option value="gmat">GMAT</option>
+                        <option value="sat">SAT</option>
+                        <option value="act">ACT</option>
+                        <option value="none">Not applicable</option>
+                    </select>
+                </div>
+                <div class="input-group" id="standardizedScoreGroup">
+                    <label>Score (if taken)</label>
+                    <input type="text" class="input-field" id="standardizedScore" placeholder="e.g., 320 or 720">
+                </div>
+                <div class="input-group">
+                    <label>Statement of Purpose (SOP) Status</label>
+                    <select class="input-field" id="sopStatus" required>
+                        <option value="">Select status</option>
+                        <option value="not-started">Not Started</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <div class="btn-row">
+                    <button type="button" class="btn btn-secondary ripple back-btn" data-back="budget">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button type="button" class="btn btn-primary ripple" id="completeOnboardingBtn">
+                        Complete Profile <i class="fas fa-check"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- AI Conversation Mode -->
+        <div class="onboarding-screen" id="aiConversation">
+            <div class="ai-chat-container">
+                <div class="chat-header">
+                    <div class="ai-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="ai-info">
+                        <h3>AI Counsellor</h3>
+                        <span class="status-indicator">Online</span>
+                    </div>
+                    <button class="switch-mode-btn ripple" id="switchToFormBtn">
+                        <i class="fas fa-list"></i> Switch to Form
+                    </button>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be dynamically added -->
+                </div>
+                <div class="chat-input-container">
+                    <button class="icon-btn ripple" id="voiceBtn"
+                        style="margin-right: 10px; background: rgba(255,255,255,0.1); color: var(--text-primary);">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your message...">
+                    <button class="send-btn ripple" id="sendMessageBtn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/onboarding.js"></script>
+</body>
+
+</html>

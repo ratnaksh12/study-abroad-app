@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hashed? Or mock for prototype
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  profile   Profile?
+  chatHistory ChatMessage[]
+  universities UserUniversity[]
+  tasks     Task[]
+}
+
+model Profile {
+  id             String @id @default(cuid())
+  userId         String @unique
+  user           User   @relation(fields: [userId], references: [id])
+  
+  // Academic
+  educationLevel String? // High School, Bachelor's, Master's, PhD
+  major          String?
+  universities   String? // JSON string of previous universities if any
+  gpa            String?
+  gpaScale       String? // 4.0, 10.0, etc.
+
+  // Study Goals
+  targetDegree   String? // Master's in CS, MBA, etc.
+  fieldOfStudy   String? // Computer Science, Data Science, etc.
+  intakeYear     String? // 2026, 2027
+  preferredCountries String? // JSON string: ["USA", "Germany"]
+  
+  // Budget & preferences
+  budget         String? // 50000
+  currency       String? // USD
+  
+  // Exams (Scores stored as JSON or simplified strings for now)
+  examScores     String? // JSON: { "IELTS": 7.5, "GRE": 320 }
+
+  isComplete     Boolean @default(false)
+}
+
+model UserUniversity {
+  id           String @id @default(cuid())
+  userId       String
+  user         User   @relation(fields: [userId], references: [id])
+  
+  universityId String // external ID or name
+  name         String
+  location     String?
+  image        String?
+  country      String
+  
+  status       String // SHORTLISTED, APPLIED, REJECTED, ACCEPTED
+  category     String? // DREAM, TARGET, SAFE
+  
+  acceptanceChance Int? // 0-100
+  matchReason      String? // AI reason
+  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Task {
+  id          String @id @default(cuid())
+  userId      String
+  user        User   @relation(fields: [userId], references: [id])
+  
+  title       String
+  description String?
+  isCompleted Boolean @default(false)
+  type        String // ONBOARDING, APPLICATION
+  
+  createdAt   DateTime @default(now())
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  role      String   // user, assistant
+  content   String
+  timestamp DateTime @default(now())
+}

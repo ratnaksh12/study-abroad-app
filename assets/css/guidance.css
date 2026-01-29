@@ -1,0 +1,272 @@
+/* Application Guidance Page Styles */
+
+.guidance-body {
+    padding-top: 70px;
+    padding-bottom: 80px;
+    background: var(--bg-primary);
+}
+
+.guidance-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+.guidance-header {
+    text-align: center;
+    margin-bottom: var(--spacing-2xl);
+    animation: fadeInUp 0.6s ease;
+}
+
+.guidance-header h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.guidance-header p {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+}
+
+/* Locked Universities */
+.locked-universities-card {
+    margin-bottom: var(--spacing-xl);
+    animation: fadeInUp 0.7s ease 0.1s both;
+}
+
+.locked-universities-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.locked-university-item {
+    padding: var(--spacing-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-left: 4px solid #4ade80;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.locked-university-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+}
+
+.locked-university-info h4 {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-xs);
+}
+
+.locked-university-info {
+    flex: 1;
+}
+
+.locked-university-info p {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.remove-university-btn {
+    padding: var(--spacing-sm);
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+}
+
+.remove-university-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.remove-university-btn i {
+    font-size: var(--font-size-sm);
+}
+
+/* Checklist */
+.checklist-card {
+    margin-bottom: var(--spacing-xl);
+    animation: fadeInUp 0.8s ease 0.2s both;
+}
+
+.completion-badge {
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--accent-orange);
+}
+
+.checklist {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.checklist-item:hover {
+    border-color: var(--accent-orange);
+    background: var(--bg-card);
+}
+
+.checklist-item.completed {
+    opacity: 0.7;
+}
+
+.checklist-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+}
+
+.checklist-item.completed .checklist-checkbox {
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    border-color: #4ade80;
+}
+
+.checklist-checkbox i {
+    font-size: var(--font-size-sm);
+    color: var(--text-primary);
+    display: none;
+}
+
+.checklist-item.completed .checklist-checkbox i {
+    display: block;
+}
+
+.checklist-text {
+    flex: 1;
+}
+
+.checklist-title {
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    margin-bottom: var(--spacing-xs);
+}
+
+.checklist-item.completed .checklist-title {
+    text-decoration: line-through;
+    color: var(--text-disabled);
+}
+
+.checklist-description {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* Timeline */
+.timeline-card {
+    margin-bottom: var(--spacing-xl);
+    animation: fadeInUp 0.9s ease 0.3s both;
+}
+
+.timeline {
+    position: relative;
+    padding-left: var(--spacing-xl);
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -28px;
+    top: 4px;
+    width: 16px;
+    height: 16px;
+    background: var(--accent-orange);
+    border: 3px solid var(--bg-card);
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px var(--border-color);
+}
+
+.timeline-item.completed::before {
+    background: #4ade80;
+}
+
+.timeline-date {
+    font-size: var(--font-size-sm);
+    color: var(--accent-orange);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.timeline-title {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+}
+
+.timeline-description {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+/* Tasks */
+.tasks-card {
+    animation: fadeInUp 1s ease 0.4s both;
+}
+
+.tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .guidance-container {
+        padding: var(--spacing-md);
+    }
+}

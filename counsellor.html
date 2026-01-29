@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Counsellor - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/counsellor.css">
+</head>
+
+<body class="counsellor-body">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <button class="back-btn ripple" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="page-title">AI Counsellor</div>
+            <button class="icon-btn ripple" id="clearChatBtn">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="counsellor-container">
+        <div class="chat-wrapper">
+            <div class="chat-messages" id="chatMessages">
+                <!-- Welcome message -->
+                <div class="message ai welcome-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <h3>Welcome! I'm your AI Study Abroad Counsellor 🎓</h3>
+                        <p>I can help you with:</p>
+                        <ul>
+                            <li>Finding the perfect universities based on your profile</li>
+                            <li>Understanding your strengths and areas to improve</li>
+                            <li>Creating personalized tasks and action plans</li>
+                            <li>Answering questions about the application process</li>
+                        </ul>
+                        <p>Ask me anything or try these suggestions:</p>
+                        <div class="quick-suggestions">
+                            <button class="suggestion-chip ripple"
+                                data-suggestion="What universities match my profile?">
+                                <i class="fas fa-university"></i> Recommend universities
+                            </button>
+                            <button class="suggestion-chip ripple" data-suggestion="What should I work on next?">
+                                <i class="fas fa-tasks"></i> Next steps
+                            </button>
+                            <button class="suggestion-chip ripple" data-suggestion="Analyze my profile strength">
+                                <i class="fas fa-chart-line"></i> Profile analysis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <button class="icon-btn ripple" id="voiceBtn"
+                    style="margin-right: 10px; background: rgba(255,255,255,0.1); color: var(--text-primary);">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <input type="text" class="chat-input" id="chatInput"
+                    placeholder="Ask me anything about studying abroad...">
+                <button class="send-btn ripple" id="sendMessageBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item ripple" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item active ripple" data-page="counsellor">
+            <i class="fas fa-robot"></i>
+            <span>AI Counsellor</span>
+        </button>
+        <button class="nav-item ripple" data-page="universities">
+            <i class="fas fa-university"></i>
+            <span>Universities</span>
+        </button>
+        <button class="nav-item ripple" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/counsellor.js"></script>
+</body>
+
+</html>

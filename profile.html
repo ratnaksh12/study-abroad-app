@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/profile.css">
+</head>
+<body class="profile-body">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <button class="back-btn ripple" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="page-title">Your Profile</div>
+            <button class="icon-btn ripple" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- User Info Card -->
+        <div class="card user-info-card">
+            <div class="user-avatar-large">
+                <i class="fas fa-user-circle"></i>
+            </div>
+            <h2 id="profileName">User Name</h2>
+            <p id="profileEmail">user@email.com</p>
+            <button class="btn btn-secondary ripple" id="editNameBtn">
+                <i class="fas fa-edit"></i> Edit Name
+            </button>
+        </div>
+
+        <!-- Academic Background -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Academic Background</h3>
+                <button class="edit-section-btn ripple" data-section="academic">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="profile-section" id="academicSection">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Study Goals -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Study Goals</h3>
+                <button class="edit-section-btn ripple" data-section="goals">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="profile-section" id="goalsSection">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Budget & Funding -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Budget & Funding</h3>
+                <button class="edit-section-btn ripple" data-section="budget">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="profile-section" id="budgetSection">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Exams & Readiness -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Exams & Readiness</h3>
+                <button class="edit-section-btn ripple" data-section="exams">
+                    <i class="fas fa-edit"></i>
+                </button>
+            </div>
+            <div class="profile-section" id="examsSection">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal hidden" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editModalTitle">Edit Section</h3>
+                <button class="close-modal" id="closeEditModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="editModalBody">
+                <!-- Dynamic form will be inserted here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary ripple" id="cancelEditBtn">Cancel</button>
+                <button class="btn btn-primary ripple" id="saveEditBtn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item ripple" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item ripple" data-page="counsellor">
+            <i class="fas fa-robot"></i>
+            <span>AI Counsellor</span>
+        </button>
+        <button class="nav-item ripple" data-page="universities">
+            <i class="fas fa-university"></i>
+            <span>Universities</span>
+        </button>
+        <button class="nav-item active ripple" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/profile.js"></script>
+</body>
+</html>

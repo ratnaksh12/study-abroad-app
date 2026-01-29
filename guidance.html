@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Guidance - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/guidance.css">
+</head>
+<body class="guidance-body">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <button class="back-btn ripple" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="page-title">Application Guidance</div>
+            <button class="icon-btn ripple" id="downloadGuideBtn">
+                <i class="fas fa-download"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Guidance Container -->
+    <div class="guidance-container">
+        <!-- Header -->
+        <div class="guidance-header">
+            <h2>Your Application Roadmap</h2>
+            <p>Step-by-step guidance for your locked universities</p>
+        </div>
+
+        <!-- Locked Universities Overview -->
+        <div class="card locked-universities-card">
+            <div class="card-header">
+                <h3>Applying To</h3>
+            </div>
+            <div class="locked-universities-list" id="lockedUniversitiesList">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Document Checklist -->
+        <div class="card checklist-card">
+            <div class="card-header">
+                <h3>Document Checklist</h3>
+                <span class="completion-badge" id="documentCompletion">0/8</span>
+            </div>
+            <div class="checklist" id="documentChecklist">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="card timeline-card">
+            <div class="card-header">
+                <h3>Application Timeline</h3>
+            </div>
+            <div class="timeline" id="applicationTimeline">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- AI-Generated Tasks -->
+        <div class="card tasks-card">
+            <div class="card-header">
+                <h3>Action Items</h3>
+                <button class="icon-btn ripple" id="addTaskBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            <div class="tasks-list" id="guidanceTasksList">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item ripple" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item ripple" data-page="counsellor">
+            <i class="fas fa-robot"></i>
+            <span>AI Counsellor</span>
+        </button>
+        <button class="nav-item ripple" data-page="universities">
+            <i class="fas fa-university"></i>
+            <span>Universities</span>
+        </button>
+        <button class="nav-item ripple" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/guidance.js"></script>
+</body>
+</html>

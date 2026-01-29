@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+
+<body class="dashboard-body">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="brand-mini">
+                <i class="fas fa-graduation-cap"></i>
+                <span>StudyPath</span>
+            </div>
+            <div class="user-menu">
+                <button class="user-avatar ripple" id="userMenuBtn">
+                    <i class="fas fa-user-circle"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Welcome back, <span class="highlight" id="userName">User</span></h1>
+            <p id="welcomeMessage">Here's your study abroad journey at a glance</p>
+        </div>
+
+        <!-- Profile Strength Card -->
+        <div class="card profile-strength-card">
+            <div class="card-header">
+                <h3>Profile Strength</h3>
+                <button class="icon-btn ripple" id="refreshStrengthBtn">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="strength-display">
+                <div class="strength-circle" id="strengthCircle">
+                    <svg width="120" height="120">
+                        <circle cx="60" cy="60" r="50" class="strength-bg"></circle>
+                        <circle cx="60" cy="60" r="50" class="strength-progress" id="strengthProgressCircle"></circle>
+                    </svg>
+                    <div class="strength-percentage" id="strengthPercentage">0%</div>
+                </div>
+                <div class="strength-details">
+                    <div class="strength-label" id="strengthLabel">Building Profile</div>
+                    <div class="strength-tips" id="strengthTips">
+                        <!-- Tips will be generated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Current Stage Card -->
+        <div class="card stage-card">
+            <div class="card-header">
+                <h3>Current Stage</h3>
+            </div>
+            <div class="stage-timeline">
+                <div class="stage-item" data-stage="profile">
+                    <div class="stage-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="stage-info">
+                        <div class="stage-name">Building Profile</div>
+                        <div class="stage-status">Complete</div>
+                    </div>
+                </div>
+                <div class="stage-connector"></div>
+                <div class="stage-item active" data-stage="discover">
+                    <div class="stage-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="stage-info">
+                        <div class="stage-name">Discovering Universities</div>
+                        <div class="stage-status">In Progress</div>
+                    </div>
+                </div>
+                <div class="stage-connector"></div>
+                <div class="stage-item locked" data-stage="finalize">
+                    <div class="stage-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="stage-info">
+                        <div class="stage-name">Finalizing Universities</div>
+                        <div class="stage-status">Locked</div>
+                    </div>
+                </div>
+                <div class="stage-connector"></div>
+                <div class="stage-item locked" data-stage="apply">
+                    <div class="stage-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stage-info">
+                        <div class="stage-name">Preparing Applications</div>
+                        <div class="stage-status">Locked</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI To-Do List -->
+        <div class="card todo-card">
+            <div class="card-header">
+                <h3>AI-Generated To-Do List</h3>
+                <button class="icon-btn ripple" id="refreshTodoBtn">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="todo-list" id="todoList">
+                <!-- Tasks will be dynamically generated -->
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button class="action-card ripple" id="counsellorActionBtn">
+                <div class="action-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="action-text">
+                    <h4>AI Counsellor</h4>
+                    <p>Get personalized guidance</p>
+                </div>
+            </button>
+            <button class="action-card ripple" id="universitiesActionBtn">
+                <div class="action-icon">
+                    <i class="fas fa-university"></i>
+                </div>
+                <div class="action-text">
+                    <h4>Universities</h4>
+                    <p>Explore recommendations</p>
+                </div>
+            </button>
+            <button class="action-card ripple" id="profileActionBtn">
+                <div class="action-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="action-text">
+                    <h4>Edit Profile</h4>
+                    <p>Update your information</p>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active ripple" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item ripple" data-page="counsellor">
+            <i class="fas fa-robot"></i>
+            <span>AI Counsellor</span>
+        </button>
+        <button class="nav-item ripple" data-page="universities">
+            <i class="fas fa-university"></i>
+            <span>Universities</span>
+        </button>
+        <button class="nav-item ripple" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,2197 @@
+{
+    "universities": [
+        {
+            "id": "stanford",
+            "name": "Stanford University",
+            "country": "United States",
+            "location": "California, USA",
+            "ranking": {
+                "qs": 5,
+                "the": 4
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Medicine",
+                "Law",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "4%",
+                "tuitionUSD": 70000,
+                "internationalStudents": "23%"
+            },
+            "website": "https://www.stanford.edu"
+        },
+        {
+            "id": "mit",
+            "name": "Massachusetts Institute of Technology",
+            "country": "United States",
+            "location": "Massachusetts, USA",
+            "ranking": {
+                "qs": 1,
+                "the": 5
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Sciences",
+                "Architecture"
+            ],
+            "stats": {
+                "acceptanceRate": "7%",
+                "tuitionUSD": 73000,
+                "internationalStudents": "33%"
+            },
+            "website": "https://www.mit.edu"
+        },
+        {
+            "id": "harvard",
+            "name": "Harvard University",
+            "country": "United States",
+            "location": "Massachusetts, USA",
+            "ranking": {
+                "qs": 4,
+                "the": 2
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Medicine",
+                "Computer Science",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "5%",
+                "tuitionUSD": 72000,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.harvard.edu"
+        },
+        {
+            "id": "berkeley",
+            "name": "University of California, Berkeley",
+            "country": "United States",
+            "location": "California, USA",
+            "ranking": {
+                "qs": 27,
+                "the": 8
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Sciences",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "17%",
+                "tuitionUSD": 44000,
+                "internationalStudents": "16%"
+            },
+            "website": "https://www.berkeley.edu"
+        },
+        {
+            "id": "caltech",
+            "name": "California Institute of Technology",
+            "country": "United States",
+            "location": "California, USA",
+            "ranking": {
+                "qs": 15,
+                "the": 7
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences",
+                "Physics"
+            ],
+            "stats": {
+                "acceptanceRate": "6%",
+                "tuitionUSD": 68000,
+                "internationalStudents": "27%"
+            },
+            "website": "https://www.caltech.edu"
+        },
+        {
+            "id": "toronto",
+            "name": "University of Toronto",
+            "country": "Canada",
+            "location": "Toronto, Canada",
+            "ranking": {
+                "qs": 21,
+                "the": 18
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Medicine",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "43%",
+                "tuitionUSD": 45000,
+                "internationalStudents": "21%"
+            },
+            "website": "https://www.utoronto.ca"
+        },
+        {
+            "id": "ubc",
+            "name": "University of British Columbia",
+            "country": "Canada",
+            "location": "Vancouver, Canada",
+            "ranking": {
+                "qs": 34,
+                "the": 40
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Sciences",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "52%",
+                "tuitionUSD": 42000,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.ubc.ca"
+        },
+        {
+            "id": "mcgill",
+            "name": "McGill University",
+            "country": "Canada",
+            "location": "Montreal, Canada",
+            "ranking": {
+                "qs": 30,
+                "the": 44
+            },
+            "programs": [
+                "Medicine",
+                "Engineering",
+                "Business",
+                "Computer Science",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "46%",
+                "tuitionUSD": 38000,
+                "internationalStudents": "31%"
+            },
+            "website": "https://www.mcgill.ca"
+        },
+        {
+            "id": "waterloo",
+            "name": "University of Waterloo",
+            "country": "Canada",
+            "location": "Waterloo, Canada",
+            "ranking": {
+                "qs": 112,
+                "the": 201
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Mathematics",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "53%",
+                "tuitionUSD": 40000,
+                "internationalStudents": "19%"
+            },
+            "website": "https://uwaterloo.ca"
+        },
+        {
+            "id": "alberta",
+            "name": "University of Alberta",
+            "country": "Canada",
+            "location": "Edmonton, Canada",
+            "ranking": {
+                "qs": 111,
+                "the": 125
+            },
+            "programs": [
+                "Engineering",
+                "Business",
+                "Medicine",
+                "Sciences",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "58%",
+                "tuitionUSD": 35000,
+                "internationalStudents": "24%"
+            },
+            "website": "https://www.ualberta.ca"
+        },
+        {
+            "id": "oxford",
+            "name": "University of Oxford",
+            "country": "United Kingdom",
+            "location": "Oxford, UK",
+            "ranking": {
+                "qs": 3,
+                "the": 1
+            },
+            "programs": [
+                "Law",
+                "Medicine",
+                "Business",
+                "Computer Science",
+                "Engineering",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "17%",
+                "tuitionUSD": 38000,
+                "internationalStudents": "41%"
+            },
+            "website": "https://www.ox.ac.uk"
+        },
+        {
+            "id": "cambridge",
+            "name": "University of Cambridge",
+            "country": "United Kingdom",
+            "location": "Cambridge, UK",
+            "ranking": {
+                "qs": 2,
+                "the": 3
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Medicine",
+                "Law",
+                "Business",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "21%",
+                "tuitionUSD": 37000,
+                "internationalStudents": "38%"
+            },
+            "website": "https://www.cam.ac.uk"
+        },
+        {
+            "id": "imperial",
+            "name": "Imperial College London",
+            "country": "United Kingdom",
+            "location": "London, UK",
+            "ranking": {
+                "qs": 6,
+                "the": 10
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Medicine",
+                "Business",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "14%",
+                "tuitionUSD": 42000,
+                "internationalStudents": "59%"
+            },
+            "website": "https://www.imperial.ac.uk"
+        },
+        {
+            "id": "ucl",
+            "name": "University College London",
+            "country": "United Kingdom",
+            "location": "London, UK",
+            "ranking": {
+                "qs": 9,
+                "the": 22
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Medicine",
+                "Law",
+                "Arts",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "48%",
+                "tuitionUSD": 35000,
+                "internationalStudents": "52%"
+            },
+            "website": "https://www.ucl.ac.uk"
+        },
+        {
+            "id": "edinburgh",
+            "name": "University of Edinburgh",
+            "country": "United Kingdom",
+            "location": "Edinburgh, UK",
+            "ranking": {
+                "qs": 22,
+                "the": 29
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Medicine",
+                "Business",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "40%",
+                "tuitionUSD": 32000,
+                "internationalStudents": "43%"
+            },
+            "website": "https://www.ed.ac.uk"
+        },
+        {
+            "id": "anu",
+            "name": "Australian National University",
+            "country": "Australia",
+            "location": "Canberra, Australia",
+            "ranking": {
+                "qs": 30,
+                "the": 62
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Sciences",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 38000,
+                "internationalStudents": "44%"
+            },
+            "website": "https://www.anu.edu.au"
+        },
+        {
+            "id": "melbourne",
+            "name": "University of Melbourne",
+            "country": "Australia",
+            "location": "Melbourne, Australia",
+            "ranking": {
+                "qs": 14,
+                "the": 34
+            },
+            "programs": [
+                "Medicine",
+                "Business",
+                "Engineering",
+                "Computer Science",
+                "Law",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 40000,
+                "internationalStudents": "47%"
+            },
+            "website": "https://www.unimelb.edu.au"
+        },
+        {
+            "id": "sydney",
+            "name": "University of Sydney",
+            "country": "Australia",
+            "location": "Sydney, Australia",
+            "ranking": {
+                "qs": 19,
+                "the": 60
+            },
+            "programs": [
+                "Business",
+                "Engineering",
+                "Medicine",
+                "Computer Science",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 42000,
+                "internationalStudents": "42%"
+            },
+            "website": "https://www.sydney.edu.au"
+        },
+        {
+            "id": "unsw",
+            "name": "University of New South Wales",
+            "country": "Australia",
+            "location": "Sydney, Australia",
+            "ranking": {
+                "qs": 43,
+                "the": 71
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Business",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "50%",
+                "tuitionUSD": 39000,
+                "internationalStudents": "40%"
+            },
+            "website": "https://www.unsw.edu.au"
+        },
+        {
+            "id": "queensland",
+            "name": "University of Queensland",
+            "country": "Australia",
+            "location": "Brisbane, Australia",
+            "ranking": {
+                "qs": 43,
+                "the": 54
+            },
+            "programs": [
+                "Medicine",
+                "Engineering",
+                "Business",
+                "Sciences",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "55%",
+                "tuitionUSD": 37000,
+                "internationalStudents": "38%"
+            },
+            "website": "https://www.uq.edu.au"
+        },
+        {
+            "id": "tum",
+            "name": "Technical University of Munich",
+            "country": "Germany",
+            "location": "Munich, Germany",
+            "ranking": {
+                "qs": 37,
+                "the": 30
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "24%",
+                "tuitionUSD": 0,
+                "internationalStudents": "27%"
+            },
+            "website": "https://www.tum.de"
+        },
+        {
+            "id": "lmu",
+            "name": "Ludwig Maximilian University of Munich",
+            "country": "Germany",
+            "location": "Munich, Germany",
+            "ranking": {
+                "qs": 59,
+                "the": 32
+            },
+            "programs": [
+                "Medicine",
+                "Sciences",
+                "Law",
+                "Arts",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 0,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.lmu.de"
+        },
+        {
+            "id": "heidelberg",
+            "name": "Heidelberg University",
+            "country": "Germany",
+            "location": "Heidelberg, Germany",
+            "ranking": {
+                "qs": 87,
+                "the": 47
+            },
+            "programs": [
+                "Medicine",
+                "Sciences",
+                "Law",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 0,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.uni-heidelberg.de"
+        },
+        {
+            "id": "rwth",
+            "name": "RWTH Aachen University",
+            "country": "Germany",
+            "location": "Aachen, Germany",
+            "ranking": {
+                "qs": 106,
+                "the": 99
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 0,
+                "internationalStudents": "22%"
+            },
+            "website": "https://www.rwth-aachen.de"
+        },
+        {
+            "id": "humboldt",
+            "name": "Humboldt University of Berlin",
+            "country": "Germany",
+            "location": "Berlin, Germany",
+            "ranking": {
+                "qs": 120,
+                "the": 74
+            },
+            "programs": [
+                "Sciences",
+                "Arts",
+                "Law",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "40%",
+                "tuitionUSD": 0,
+                "internationalStudents": "18%"
+            },
+            "website": "https://www.hu-berlin.de"
+        },
+        {
+            "id": "auckland",
+            "name": "University of Auckland",
+            "country": "New Zealand",
+            "location": "Auckland, New Zealand",
+            "ranking": {
+                "qs": 68,
+                "the": 139
+            },
+            "programs": [
+                "Engineering",
+                "Business",
+                "Medicine",
+                "Computer Science",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "60%",
+                "tuitionUSD": 28000,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.auckland.ac.nz"
+        },
+        {
+            "id": "otago",
+            "name": "University of Otago",
+            "country": "New Zealand",
+            "location": "Dunedin, New Zealand",
+            "ranking": {
+                "qs": 217,
+                "the": 201
+            },
+            "programs": [
+                "Medicine",
+                "Sciences",
+                "Business",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "65%",
+                "tuitionUSD": 26000,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.otago.ac.nz"
+        },
+        {
+            "id": "victoria-nz",
+            "name": "Victoria University of Wellington",
+            "country": "New Zealand",
+            "location": "Wellington, New Zealand",
+            "ranking": {
+                "qs": 236,
+                "the": 401
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Arts",
+                "Sciences",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 25000,
+                "internationalStudents": "22%"
+            },
+            "website": "https://www.wgtn.ac.nz"
+        },
+        {
+            "id": "canterbury",
+            "name": "University of Canterbury",
+            "country": "New Zealand",
+            "location": "Christchurch, New Zealand",
+            "ranking": {
+                "qs": 256,
+                "the": 401
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "68%",
+                "tuitionUSD": 24000,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.canterbury.ac.nz"
+        },
+        {
+            "id": "massey",
+            "name": "Massey University",
+            "country": "New Zealand",
+            "location": "Palmerston North, New Zealand",
+            "ranking": {
+                "qs": 292,
+                "the": 601
+            },
+            "programs": [
+                "Business",
+                "Engineering",
+                "Sciences",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "75%",
+                "tuitionUSD": 23000,
+                "internationalStudents": "18%"
+            },
+            "website": "https://www.massey.ac.nz"
+        },
+        {
+            "id": "psl",
+            "name": "Paris Sciences et Lettres University",
+            "country": "France",
+            "location": "Paris, France",
+            "ranking": {
+                "qs": 24,
+                "the": 40
+            },
+            "programs": [
+                "Sciences",
+                "Arts",
+                "Engineering",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "25%",
+                "tuitionUSD": 3000,
+                "internationalStudents": "28%"
+            },
+            "website": "https://www.psl.eu"
+        },
+        {
+            "id": "sorbonne",
+            "name": "Sorbonne University",
+            "country": "France",
+            "location": "Paris, France",
+            "ranking": {
+                "qs": 59,
+                "the": 88
+            },
+            "programs": [
+                "Arts",
+                "Sciences",
+                "Medicine",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 2800,
+                "internationalStudents": "21%"
+            },
+            "website": "https://www.sorbonne-universite.fr"
+        },
+        {
+            "id": "polytechnique",
+            "name": "École Polytechnique",
+            "country": "France",
+            "location": "Palaiseau, France",
+            "ranking": {
+                "qs": 46,
+                "the": 95
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "12%",
+                "tuitionUSD": 0,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.polytechnique.edu"
+        },
+        {
+            "id": "sciences-po",
+            "name": "Sciences Po",
+            "country": "France",
+            "location": "Paris, France",
+            "ranking": {
+                "qs": 259,
+                "the": 401
+            },
+            "programs": [
+                "Law",
+                "Business",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "18%",
+                "tuitionUSD": 15000,
+                "internationalStudents": "46%"
+            },
+            "website": "https://www.sciencespo.fr"
+        },
+        {
+            "id": "paris-saclay",
+            "name": "Université Paris-Saclay",
+            "country": "France",
+            "location": "Paris, France",
+            "ranking": {
+                "qs": 71,
+                "the": 58
+            },
+            "programs": [
+                "Sciences",
+                "Engineering",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 2500,
+                "internationalStudents": "17%"
+            },
+            "website": "https://www.universite-paris-saclay.fr"
+        },
+        {
+            "id": "tcd",
+            "name": "Trinity College Dublin",
+            "country": "Ireland",
+            "location": "Dublin, Ireland",
+            "ranking": {
+                "qs": 87,
+                "the": 155
+            },
+            "programs": [
+                "Computer Science",
+                "Business",
+                "Medicine",
+                "Law",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 22000,
+                "internationalStudents": "27%"
+            },
+            "website": "https://www.tcd.ie"
+        },
+        {
+            "id": "ucd",
+            "name": "University College Dublin",
+            "country": "Ireland",
+            "location": "Dublin, Ireland",
+            "ranking": {
+                "qs": 171,
+                "the": 201
+            },
+            "programs": [
+                "Business",
+                "Engineering",
+                "Computer Science",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "45%",
+                "tuitionUSD": 20000,
+                "internationalStudents": "23%"
+            },
+            "website": "https://www.ucd.ie"
+        },
+        {
+            "id": "nuig",
+            "name": "National University of Ireland Galway",
+            "country": "Ireland",
+            "location": "Galway, Ireland",
+            "ranking": {
+                "qs": 289,
+                "the": 351
+            },
+            "programs": [
+                "Engineering",
+                "Sciences",
+                "Business",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "50%",
+                "tuitionUSD": 18000,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.nuigalway.ie"
+        },
+        {
+            "id": "ucc",
+            "name": "University College Cork",
+            "country": "Ireland",
+            "location": "Cork, Ireland",
+            "ranking": {
+                "qs": 292,
+                "the": 351
+            },
+            "programs": [
+                "Medicine",
+                "Business",
+                "Engineering",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "52%",
+                "tuitionUSD": 19000,
+                "internationalStudents": "18%"
+            },
+            "website": "https://www.ucc.ie"
+        },
+        {
+            "id": "dcu",
+            "name": "Dublin City University",
+            "country": "Ireland",
+            "location": "Dublin, Ireland",
+            "ranking": {
+                "qs": 421,
+                "the": 601
+            },
+            "programs": [
+                "Business",
+                "Computer Science",
+                "Engineering"
+            ],
+            "stats": {
+                "acceptanceRate": "55%",
+                "tuitionUSD": 17000,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.dcu.ie"
+        },
+        {
+            "id": "nus",
+            "name": "National University of Singapore",
+            "country": "Singapore",
+            "location": "Singapore",
+            "ranking": {
+                "qs": 8,
+                "the": 19
+            },
+            "programs": [
+                "Computer Science",
+                "Engineering",
+                "Business",
+                "Medicine",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "5%",
+                "tuitionUSD": 30000,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.nus.edu.sg"
+        },
+        {
+            "id": "ntu",
+            "name": "Nanyang Technological University",
+            "country": "Singapore",
+            "location": "Singapore",
+            "ranking": {
+                "qs": 26,
+                "the": 32
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Business",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "8%",
+                "tuitionUSD": 28000,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.ntu.edu.sg"
+        },
+        {
+            "id": "smu",
+            "name": "Singapore Management University",
+            "country": "Singapore",
+            "location": "Singapore",
+            "ranking": {
+                "qs": 545,
+                "the": 601
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "25%",
+                "tuitionUSD": 26000,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.smu.edu.sg"
+        },
+        {
+            "id": "sutd",
+            "name": "Singapore University of Technology and Design",
+            "country": "Singapore",
+            "location": "Singapore",
+            "ranking": {
+                "qs": 441,
+                "the": 601
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Architecture"
+            ],
+            "stats": {
+                "acceptanceRate": "15%",
+                "tuitionUSD": 27000,
+                "internationalStudents": "18%"
+            },
+            "website": "https://www.sutd.edu.sg"
+        },
+        {
+            "id": "sit",
+            "name": "Singapore Institute of Technology",
+            "country": "Singapore",
+            "location": "Singapore",
+            "ranking": {
+                "qs": null,
+                "the": null
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Business"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 24000,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.singaporetech.edu.sg"
+        },
+        {
+            "id": "uva",
+            "name": "University of Amsterdam",
+            "country": "Netherlands",
+            "location": "Amsterdam, Netherlands",
+            "ranking": {
+                "qs": 53,
+                "the": 61
+            },
+            "programs": [
+                "Business",
+                "Computer Science",
+                "Law",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 12000,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.uva.nl"
+        },
+        {
+            "id": "delft",
+            "name": "Delft University of Technology",
+            "country": "Netherlands",
+            "location": "Delft, Netherlands",
+            "ranking": {
+                "qs": 47,
+                "the": 70
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Architecture"
+            ],
+            "stats": {
+                "acceptanceRate": "40%",
+                "tuitionUSD": 14000,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.tudelft.nl"
+        },
+        {
+            "id": "utrecht",
+            "name": "Utrecht University",
+            "country": "Netherlands",
+            "location": "Utrecht, Netherlands",
+            "ranking": {
+                "qs": 107,
+                "the": 66
+            },
+            "programs": [
+                "Sciences",
+                "Medicine",
+                "Law",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "45%",
+                "tuitionUSD": 11000,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.uu.nl"
+        },
+        {
+            "id": "leiden",
+            "name": "Leiden University",
+            "country": "Netherlands",
+            "location": "Leiden, Netherlands",
+            "ranking": {
+                "qs": 126,
+                "the": 77
+            },
+            "programs": [
+                "Law",
+                "Medicine",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "50%",
+                "tuitionUSD": 10000,
+                "internationalStudents": "18%"
+            },
+            "website": "https://www.universiteitleiden.nl"
+        },
+        {
+            "id": "erasmus",
+            "name": "Erasmus University Rotterdam",
+            "country": "Netherlands",
+            "location": "Rotterdam, Netherlands",
+            "ranking": {
+                "qs": 208,
+                "the": 72
+            },
+            "programs": [
+                "Business",
+                "Medicine",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "48%",
+                "tuitionUSD": 13000,
+                "internationalStudents": "22%"
+            },
+            "website": "https://www.eur.nl"
+        },
+        {
+            "id": "uae-university",
+            "name": "United Arab Emirates University",
+            "country": "United Arab Emirates",
+            "location": "Al Ain, UAE",
+            "ranking": {
+                "qs": 364,
+                "the": 401
+            },
+            "programs": [
+                "Engineering",
+                "Business",
+                "Medicine",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "40%",
+                "tuitionUSD": 15000,
+                "internationalStudents": "35%"
+            },
+            "website": "https://www.uaeu.ac.ae"
+        },
+        {
+            "id": "aus",
+            "name": "American University of Sharjah",
+            "country": "United Arab Emirates",
+            "location": "Sharjah, UAE",
+            "ranking": {
+                "qs": 395,
+                "the": 601
+            },
+            "programs": [
+                "Engineering",
+                "Business",
+                "Architecture",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "45%",
+                "tuitionUSD": 28000,
+                "internationalStudents": "70%"
+            },
+            "website": "https://www.aus.edu"
+        },
+        {
+            "id": "khalifa",
+            "name": "Khalifa University",
+            "country": "United Arab Emirates",
+            "location": "Abu Dhabi, UAE",
+            "ranking": {
+                "qs": 183,
+                "the": 401
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 0,
+                "internationalStudents": "40%"
+            },
+            "website": "https://www.ku.ac.ae"
+        },
+        {
+            "id": "uaeu",
+            "name": "University of Dubai",
+            "country": "United Arab Emirates",
+            "location": "Dubai, UAE",
+            "ranking": {
+                "qs": null,
+                "the": null
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "50%",
+                "tuitionUSD": 20000,
+                "internationalStudents": "60%"
+            },
+            "website": "https://www.ud.ac.ae"
+        },
+        {
+            "id": "zayed",
+            "name": "Zayed University",
+            "country": "United Arab Emirates",
+            "location": "Dubai, UAE",
+            "ranking": {
+                "qs": 651,
+                "the": 601
+            },
+            "programs": [
+                "Business",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "55%",
+                "tuitionUSD": 18000,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.zu.ac.ae"
+        },
+        {
+            "id": "sapienza",
+            "name": "Sapienza University of Rome",
+            "country": "Italy",
+            "location": "Rome, Italy",
+            "ranking": {
+                "qs": 134,
+                "the": 197
+            },
+            "programs": [
+                "Engineering",
+                "Medicine",
+                "Law",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "60%",
+                "tuitionUSD": 4000,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.uniroma1.it"
+        },
+        {
+            "id": "bologna",
+            "name": "University of Bologna",
+            "country": "Italy",
+            "location": "Bologna, Italy",
+            "ranking": {
+                "qs": 133,
+                "the": 172
+            },
+            "programs": [
+                "Law",
+                "Engineering",
+                "Medicine",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "65%",
+                "tuitionUSD": 3500,
+                "internationalStudents": "10%"
+            },
+            "website": "https://www.unibo.it"
+        },
+        {
+            "id": "milan",
+            "name": "University of Milan",
+            "country": "Italy",
+            "location": "Milan, Italy",
+            "ranking": {
+                "qs": 316,
+                "the": 351
+            },
+            "programs": [
+                "Medicine",
+                "Sciences",
+                "Law",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 3800,
+                "internationalStudents": "8%"
+            },
+            "website": "https://www.unimi.it"
+        },
+        {
+            "id": "polimi",
+            "name": "Polytechnic University of Milan",
+            "country": "Italy",
+            "location": "Milan, Italy",
+            "ranking": {
+                "qs": 111,
+                "the": 201
+            },
+            "programs": [
+                "Engineering",
+                "Architecture",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "55%",
+                "tuitionUSD": 4200,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.polimi.it"
+        },
+        {
+            "id": "padova",
+            "name": "University of Padua",
+            "country": "Italy",
+            "location": "Padua, Italy",
+            "ranking": {
+                "qs": 219,
+                "the": 201
+            },
+            "programs": [
+                "Medicine",
+                "Sciences",
+                "Engineering",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "68%",
+                "tuitionUSD": 3600,
+                "internationalStudents": "9%"
+            },
+            "website": "https://www.unipd.it"
+        },
+        {
+            "id": "barcelona",
+            "name": "University of Barcelona",
+            "country": "Spain",
+            "location": "Barcelona, Spain",
+            "ranking": {
+                "qs": 165,
+                "the": 198
+            },
+            "programs": [
+                "Medicine",
+                "Sciences",
+                "Arts",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "75%",
+                "tuitionUSD": 2500,
+                "internationalStudents": "10%"
+            },
+            "website": "https://www.ub.edu"
+        },
+        {
+            "id": "autonoma-barcelona",
+            "name": "Autonomous University of Barcelona",
+            "country": "Spain",
+            "location": "Barcelona, Spain",
+            "ranking": {
+                "qs": 149,
+                "the": 182
+            },
+            "programs": [
+                "Sciences",
+                "Medicine",
+                "Engineering",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 2300,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.uab.cat"
+        },
+        {
+            "id": "complutense",
+            "name": "Complutense University of Madrid",
+            "country": "Spain",
+            "location": "Madrid, Spain",
+            "ranking": {
+                "qs": 171,
+                "the": 601
+            },
+            "programs": [
+                "Law",
+                "Medicine",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "80%",
+                "tuitionUSD": 2200,
+                "internationalStudents": "8%"
+            },
+            "website": "https://www.ucm.es"
+        },
+        {
+            "id": "pompeu-fabra",
+            "name": "Pompeu Fabra University",
+            "country": "Spain",
+            "location": "Barcelona, Spain",
+            "ranking": {
+                "qs": 233,
+                "the": 152
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "65%",
+                "tuitionUSD": 2800,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.upf.edu"
+        },
+        {
+            "id": "autonoma-madrid",
+            "name": "Autonomous University of Madrid",
+            "country": "Spain",
+            "location": "Madrid, Spain",
+            "ranking": {
+                "qs": 215,
+                "the": 201
+            },
+            "programs": [
+                "Sciences",
+                "Medicine",
+                "Law",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "72%",
+                "tuitionUSD": 2400,
+                "internationalStudents": "11%"
+            },
+            "website": "https://www.uam.es"
+        },
+        {
+            "id": "msu",
+            "name": "Lomonosov Moscow State University",
+            "country": "Russia",
+            "location": "Moscow, Russia",
+            "ranking": {
+                "qs": 87,
+                "the": 174
+            },
+            "programs": [
+                "Sciences",
+                "Engineering",
+                "Law",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "40%",
+                "tuitionUSD": 5000,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.msu.ru"
+        },
+        {
+            "id": "spbsu",
+            "name": "Saint Petersburg State University",
+            "country": "Russia",
+            "location": "Saint Petersburg, Russia",
+            "ranking": {
+                "qs": 315,
+                "the": 601
+            },
+            "programs": [
+                "Sciences",
+                "Law",
+                "Arts",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "45%",
+                "tuitionUSD": 4500,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.spbu.ru"
+        },
+        {
+            "id": "hse",
+            "name": "Higher School of Economics",
+            "country": "Russia",
+            "location": "Moscow, Russia",
+            "ranking": {
+                "qs": 343,
+                "the": 601
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "50%",
+                "tuitionUSD": 6000,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.hse.ru"
+        },
+        {
+            "id": "mipt",
+            "name": "Moscow Institute of Physics and Technology",
+            "country": "Russia",
+            "location": "Moscow, Russia",
+            "ranking": {
+                "qs": 355,
+                "the": 401
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 5500,
+                "internationalStudents": "18%"
+            },
+            "website": "https://www.mipt.ru"
+        },
+        {
+            "id": "bauman",
+            "name": "Bauman Moscow State Technical University",
+            "country": "Russia",
+            "location": "Moscow, Russia",
+            "ranking": {
+                "qs": 601,
+                "the": null
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "42%",
+                "tuitionUSD": 4800,
+                "internationalStudents": "22%"
+            },
+            "website": "https://www.bmstu.ru"
+        },
+        {
+            "id": "tsu",
+            "name": "Tbilisi State University",
+            "country": "Georgia",
+            "location": "Tbilisi, Georgia",
+            "ranking": {
+                "qs": 801,
+                "the": null
+            },
+            "programs": [
+                "Medicine",
+                "Law",
+                "Arts",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 3000,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.tsu.ge"
+        },
+        {
+            "id": "ug",
+            "name": "University of Georgia",
+            "country": "Georgia",
+            "location": "Tbilisi, Georgia",
+            "ranking": {
+                "qs": null,
+                "the": null
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "75%",
+                "tuitionUSD": 4000,
+                "internationalStudents": "35%"
+            },
+            "website": "https://www.ug.edu.ge"
+        },
+        {
+            "id": "gtu",
+            "name": "Georgian Technical University",
+            "country": "Georgia",
+            "location": "Tbilisi, Georgia",
+            "ranking": {
+                "qs": null,
+                "the": null
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "65%",
+                "tuitionUSD": 2500,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.gtu.ge"
+        },
+        {
+            "id": "iliauni",
+            "name": "Ilia State University",
+            "country": "Georgia",
+            "location": "Tbilisi, Georgia",
+            "ranking": {
+                "qs": null,
+                "the": null
+            },
+            "programs": [
+                "Sciences",
+                "Arts",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "68%",
+                "tuitionUSD": 2800,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.iliauni.edu.ge"
+        },
+        {
+            "id": "caucasus",
+            "name": "Caucasus University",
+            "country": "Georgia",
+            "location": "Tbilisi, Georgia",
+            "ranking": {
+                "qs": null,
+                "the": null
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "72%",
+                "tuitionUSD": 3500,
+                "internationalStudents": "28%"
+            },
+            "website": "https://www.cu.edu.ge"
+        },
+        {
+            "id": "univie",
+            "name": "University of Vienna",
+            "country": "Austria",
+            "location": "Vienna, Austria",
+            "ranking": {
+                "qs": 130,
+                "the": 137
+            },
+            "programs": [
+                "Law",
+                "Medicine",
+                "Sciences",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "60%",
+                "tuitionUSD": 1500,
+                "internationalStudents": "28%"
+            },
+            "website": "https://www.univie.ac.at"
+        },
+        {
+            "id": "tu-wien",
+            "name": "Vienna University of Technology",
+            "country": "Austria",
+            "location": "Vienna, Austria",
+            "ranking": {
+                "qs": 192,
+                "the": 201
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Architecture"
+            ],
+            "stats": {
+                "acceptanceRate": "55%",
+                "tuitionUSD": 1600,
+                "internationalStudents": "25%"
+            },
+            "website": "https://www.tuwien.at"
+        },
+        {
+            "id": "wu-wien",
+            "name": "Vienna University of Economics and Business",
+            "country": "Austria",
+            "location": "Vienna, Austria",
+            "ranking": {
+                "qs": 401,
+                "the": 601
+            },
+            "programs": [
+                "Business",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "65%",
+                "tuitionUSD": 1400,
+                "internationalStudents": "30%"
+            },
+            "website": "https://www.wu.ac.at"
+        },
+        {
+            "id": "uni-graz",
+            "name": "University of Graz",
+            "country": "Austria",
+            "location": "Graz, Austria",
+            "ranking": {
+                "qs": 451,
+                "the": 401
+            },
+            "programs": [
+                "Law",
+                "Sciences",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 1500,
+                "internationalStudents": "22%"
+            },
+            "website": "https://www.uni-graz.at"
+        },
+        {
+            "id": "uni-innsbruck",
+            "name": "University of Innsbruck",
+            "country": "Austria",
+            "location": "Innsbruck, Austria",
+            "ranking": {
+                "qs": 351,
+                "the": 401
+            },
+            "programs": [
+                "Sciences",
+                "Law",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "68%",
+                "tuitionUSD": 1450,
+                "internationalStudents": "20%"
+            },
+            "website": "https://www.uibk.ac.at"
+        },
+        {
+            "id": "um",
+            "name": "University of Malaya",
+            "country": "Malaysia",
+            "location": "Kuala Lumpur, Malaysia",
+            "ranking": {
+                "qs": 65,
+                "the": 251
+            },
+            "programs": [
+                "Engineering",
+                "Medicine",
+                "Business",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "50%",
+                "tuitionUSD": 5000,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.um.edu.my"
+        },
+        {
+            "id": "utm",
+            "name": "Universiti Teknologi Malaysia",
+            "country": "Malaysia",
+            "location": "Johor, Malaysia",
+            "ranking": {
+                "qs": 188,
+                "the": 601
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "55%",
+                "tuitionUSD": 4500,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.utm.my"
+        },
+        {
+            "id": "usm",
+            "name": "Universiti Sains Malaysia",
+            "country": "Malaysia",
+            "location": "Penang, Malaysia",
+            "ranking": {
+                "qs": 137,
+                "the": 601
+            },
+            "programs": [
+                "Medicine",
+                "Engineering",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "58%",
+                "tuitionUSD": 4200,
+                "internationalStudents": "10%"
+            },
+            "website": "https://www.usm.my"
+        },
+        {
+            "id": "upm",
+            "name": "Universiti Putra Malaysia",
+            "country": "Malaysia",
+            "location": "Selangor, Malaysia",
+            "ranking": {
+                "qs": 143,
+                "the": 601
+            },
+            "programs": [
+                "Engineering",
+                "Business",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "60%",
+                "tuitionUSD": 4000,
+                "internationalStudents": "14%"
+            },
+            "website": "https://www.upm.edu.my"
+        },
+        {
+            "id": "ukm",
+            "name": "Universiti Kebangsaan Malaysia",
+            "country": "Malaysia",
+            "location": "Selangor, Malaysia",
+            "ranking": {
+                "qs": 159,
+                "the": 601
+            },
+            "programs": [
+                "Medicine",
+                "Engineering",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "62%",
+                "tuitionUSD": 4300,
+                "internationalStudents": "11%"
+            },
+            "website": "https://www.ukm.my"
+        },
+        {
+            "id": "utokyo",
+            "name": "University of Tokyo",
+            "country": "Japan",
+            "location": "Tokyo, Japan",
+            "ranking": {
+                "qs": 28,
+                "the": 29
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Medicine",
+                "Sciences",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 5000,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.u-tokyo.ac.jp"
+        },
+        {
+            "id": "kyoto",
+            "name": "Kyoto University",
+            "country": "Japan",
+            "location": "Kyoto, Japan",
+            "ranking": {
+                "qs": 36,
+                "the": 55
+            },
+            "programs": [
+                "Sciences",
+                "Engineering",
+                "Medicine",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "38%",
+                "tuitionUSD": 4800,
+                "internationalStudents": "10%"
+            },
+            "website": "https://www.kyoto-u.ac.jp"
+        },
+        {
+            "id": "osaka",
+            "name": "Osaka University",
+            "country": "Japan",
+            "location": "Osaka, Japan",
+            "ranking": {
+                "qs": 80,
+                "the": 175
+            },
+            "programs": [
+                "Engineering",
+                "Medicine",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "42%",
+                "tuitionUSD": 4500,
+                "internationalStudents": "11%"
+            },
+            "website": "https://www.osaka-u.ac.jp"
+        },
+        {
+            "id": "tohoku",
+            "name": "Tohoku University",
+            "country": "Japan",
+            "location": "Sendai, Japan",
+            "ranking": {
+                "qs": 77,
+                "the": 201
+            },
+            "programs": [
+                "Engineering",
+                "Sciences",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "45%",
+                "tuitionUSD": 4600,
+                "internationalStudents": "13%"
+            },
+            "website": "https://www.tohoku.ac.jp"
+        },
+        {
+            "id": "titech",
+            "name": "Tokyo Institute of Technology",
+            "country": "Japan",
+            "location": "Tokyo, Japan",
+            "ranking": {
+                "qs": 91,
+                "the": 301
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "40%",
+                "tuitionUSD": 5200,
+                "internationalStudents": "14%"
+            },
+            "website": "https://www.titech.ac.jp"
+        },
+        {
+            "id": "snu",
+            "name": "Seoul National University",
+            "country": "South Korea",
+            "location": "Seoul, South Korea",
+            "ranking": {
+                "qs": 41,
+                "the": 56
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Business",
+                "Medicine",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "25%",
+                "tuitionUSD": 6000,
+                "internationalStudents": "8%"
+            },
+            "website": "https://www.snu.ac.kr"
+        },
+        {
+            "id": "kaist",
+            "name": "Korea Advanced Institute of Science and Technology",
+            "country": "South Korea",
+            "location": "Daejeon, South Korea",
+            "ranking": {
+                "qs": 56,
+                "the": 96
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "30%",
+                "tuitionUSD": 5500,
+                "internationalStudents": "10%"
+            },
+            "website": "https://www.kaist.ac.kr"
+        },
+        {
+            "id": "yonsei",
+            "name": "Yonsei University",
+            "country": "South Korea",
+            "location": "Seoul, South Korea",
+            "ranking": {
+                "qs": 76,
+                "the": 78
+            },
+            "programs": [
+                "Business",
+                "Medicine",
+                "Engineering",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "35%",
+                "tuitionUSD": 7000,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.yonsei.ac.kr"
+        },
+        {
+            "id": "korea",
+            "name": "Korea University",
+            "country": "South Korea",
+            "location": "Seoul, South Korea",
+            "ranking": {
+                "qs": 79,
+                "the": 198
+            },
+            "programs": [
+                "Business",
+                "Law",
+                "Engineering",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "38%",
+                "tuitionUSD": 6500,
+                "internationalStudents": "9%"
+            },
+            "website": "https://www.korea.ac.kr"
+        },
+        {
+            "id": "postech",
+            "name": "Pohang University of Science and Technology",
+            "country": "South Korea",
+            "location": "Pohang, South Korea",
+            "ranking": {
+                "qs": 100,
+                "the": 66
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "28%",
+                "tuitionUSD": 5800,
+                "internationalStudents": "7%"
+            },
+            "website": "https://www.postech.ac.kr"
+        },
+        {
+            "id": "uw",
+            "name": "University of Warsaw",
+            "country": "Poland",
+            "location": "Warsaw, Poland",
+            "ranking": {
+                "qs": 262,
+                "the": 601
+            },
+            "programs": [
+                "Law",
+                "Sciences",
+                "Arts",
+                "Medicine"
+            ],
+            "stats": {
+                "acceptanceRate": "65%",
+                "tuitionUSD": 3000,
+                "internationalStudents": "15%"
+            },
+            "website": "https://www.uw.edu.pl"
+        },
+        {
+            "id": "uj",
+            "name": "Jagiellonian University",
+            "country": "Poland",
+            "location": "Krakow, Poland",
+            "ranking": {
+                "qs": 317,
+                "the": 601
+            },
+            "programs": [
+                "Medicine",
+                "Law",
+                "Sciences",
+                "Arts"
+            ],
+            "stats": {
+                "acceptanceRate": "70%",
+                "tuitionUSD": 2800,
+                "internationalStudents": "12%"
+            },
+            "website": "https://www.uj.edu.pl"
+        },
+        {
+            "id": "pw",
+            "name": "Warsaw University of Technology",
+            "country": "Poland",
+            "location": "Warsaw, Poland",
+            "ranking": {
+                "qs": 451,
+                "the": 801
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science"
+            ],
+            "stats": {
+                "acceptanceRate": "60%",
+                "tuitionUSD": 2500,
+                "internationalStudents": "10%"
+            },
+            "website": "https://www.pw.edu.pl"
+        },
+        {
+            "id": "agh",
+            "name": "AGH University of Science and Technology",
+            "country": "Poland",
+            "location": "Krakow, Poland",
+            "ranking": {
+                "qs": 601,
+                "the": 801
+            },
+            "programs": [
+                "Engineering",
+                "Computer Science",
+                "Sciences"
+            ],
+            "stats": {
+                "acceptanceRate": "68%",
+                "tuitionUSD": 2600,
+                "internationalStudents": "8%"
+            },
+            "website": "https://www.agh.edu.pl"
+        },
+        {
+            "id": "uam",
+            "name": "Adam Mickiewicz University",
+            "country": "Poland",
+            "location": "Poznan, Poland",
+            "ranking": {
+                "qs": 651,
+                "the": 801
+            },
+            "programs": [
+                "Sciences",
+                "Arts",
+                "Law"
+            ],
+            "stats": {
+                "acceptanceRate": "72%",
+                "tuitionUSD": 2400,
+                "internationalStudents": "9%"
+            },
+            "website": "https://www.amu.edu.pl"
+        }
+    ]
+}

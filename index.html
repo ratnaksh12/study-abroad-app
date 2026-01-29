@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyPath - Your Study Abroad Journey</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body class="landing-body">
+    <!-- Landing Container -->
+    <div class="landing-container">
+        <!-- Logo and Brand -->
+        <div class="brand-section">
+            <div class="logo-placeholder">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <h1 class="brand-name">StudyPath</h1>
+        </div>
+
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h2 class="hero-headline">
+                Plan your <span class="highlight">study-abroad journey</span> with a guided <span class="highlight">AI counsellor.</span>
+            </h2>
+            <p class="hero-description">
+                Get personalized university recommendations, step-by-step application guidance, and AI-powered insights to make your dream of studying abroad a reality.
+            </p>
+        </div>
+
+        <!-- CTA Buttons -->
+        <div class="cta-section">
+            <button class="btn btn-primary ripple" id="getStartedBtn">
+                Get Started
+                <i class="fas fa-arrow-right"></i>
+            </button>
+            <button class="btn btn-secondary ripple" id="loginBtn">
+                Login
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="glow-orb glow-orb-1"></div>
+        <div class="glow-orb glow-orb-2"></div>
+    </div>
+
+    <script src="assets/js/common.js"></script>
+    <script>
+        // Check if user is already authenticated
+        window.addEventListener('DOMContentLoaded', function() {
+            const currentUser = localStorage.getItem('currentUser');
+            if (currentUser) {
+                const userData = getUserData(currentUser);
+                if (userData) {
+                    // Check onboarding completion
+                    if (userData.profileComplete) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        window.location.href = 'onboarding.html';
+                    }
+                }
+            }
+
+            // Get Started button - route to signup
+            document.getElementById('getStartedBtn').addEventListener('click', function(e) {
+                addRippleEffect(e, this);
+                setTimeout(() => {
+                    window.location.href = 'auth.html?mode=signup';
+                }, 300);
+            });
+
+            // Login button - route to login
+            document.getElementById('loginBtn').addEventListener('click', function(e) {
+                addRippleEffect(e, this);
+                setTimeout(() => {
+                    window.location.href = 'auth.html?mode=login';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>

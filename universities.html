@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universities - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/universities.css">
+</head>
+
+<body class="universities-body">
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <button class="back-btn ripple" id="backBtn">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="page-title">University Recommendations</div>
+            <button class="icon-btn ripple" id="filterBtn">
+                <i class="fas fa-filter"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Universities Container -->
+    <div class="universities-container">
+        <!-- Header Section -->
+        <div class="universities-header">
+            <h2>AI-Matched Universities</h2>
+            <p>Based on your profile, here are universities categorized by acceptance probability</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="filter-tab active ripple" data-category="all">
+                All <span class="tab-count" id="allCount">0</span>
+            </button>
+            <button class="filter-tab ripple" data-category="dream">
+                Dream <span class="tab-count" id="dreamCount">0</span>
+            </button>
+            <button class="filter-tab ripple" data-category="target">
+                Target <span class="tab-count" id="targetCount">0</span>
+            </button>
+            <button class="filter-tab ripple" data-category="safe">
+                Safe <span class="tab-count" id="safeCount">0</span>
+            </button>
+            <button class="filter-tab ripple" data-category="shortlisted">
+                Shortlisted <span class="tab-count" id="shortlistedCount">0</span>
+            </button>
+        </div>
+
+        <!-- University Cards Grid -->
+        <div class="university-grid" id="universityGrid">
+            <!-- Cards will be dynamically generated -->
+        </div>
+
+        <!-- Lock Universities Section -->
+        <div class="lock-section" id="lockSection">
+            <div class="lock-info">
+                <i class="fas fa-lock"></i>
+                <div>
+                    <h3 id="lockSectionTitle">Ready to finalize?</h3>
+                    <p id="lockSectionDescription">Lock at least one university to proceed to application preparation
+                    </p>
+                </div>
+            </div>
+            <div id="lockButtons">
+                <!-- Initial state: single button -->
+                <button class="btn btn-primary ripple" id="lockUniversitiesBtn">
+                    Lock Selected Universities
+                </button>
+                <!-- After locked: two buttons -->
+                <button class="btn btn-secondary ripple hidden" id="lockMoreBtn">
+                    <i class="fas fa-plus"></i> Lock More Universities
+                </button>
+                <button class="btn btn-primary ripple hidden" id="continueGuidanceBtn">
+                    <i class="fas fa-arrow-right"></i> Continue to Application Guidance
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item ripple" data-page="dashboard">
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+        </button>
+        <button class="nav-item ripple" data-page="counsellor">
+            <i class="fas fa-robot"></i>
+            <span>AI Counsellor</span>
+        </button>
+        <button class="nav-item active ripple" data-page="universities">
+            <i class="fas fa-university"></i>
+            <span>Universities</span>
+        </button>
+        <button class="nav-item ripple" data-page="profile">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </button>
+    </nav>
+
+    <!-- Filter Modal -->
+    <div class="modal hidden" id="filterModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Filter Universities</h3>
+                <button class="close-modal" id="closeFilterBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Country Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">Preferred Countries</label>
+                    <div class="checkbox-group" id="countryFilters">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Budget Filter -->
+                <div class="filter-group">
+                    <label class="filter-label">Max Tuition (USD/Year)</label>
+                    <div class="range-container">
+                        <input type="range" id="budgetRange" min="0" max="100000" step="5000" class="range-slider">
+                        <div class="range-value" id="budgetValue">Any</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="resetFiltersBtn">Reset</button>
+                <button class="btn btn-primary" id="applyFiltersBtn">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/common.js"></script>
+    <script src="assets/js/universities.js"></script>
+</body>
+
+</html>

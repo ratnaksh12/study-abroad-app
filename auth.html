@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication - StudyPath</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/common.css">
+    <link rel="stylesheet" href="assets/css/auth.css">
+</head>
+
+<body class="auth-body">
+    <div class="auth-container">
+        <!-- Back Button -->
+        <button class="back-btn ripple" id="backBtn">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <!-- Auth Card -->
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo-mini">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2 class="auth-title" id="authTitle">Welcome Back</h2>
+                <p class="auth-subtitle" id="authSubtitle">Login to continue your journey</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="loginForm">
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" class="input-field" placeholder="Email" id="loginEmail" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="input-field" placeholder="Password" id="loginPassword" required>
+                    <i class="fas fa-eye toggle-password" id="toggleLoginPassword"></i>
+                </div>
+                <div class="forgot-password-link">
+                    <a href="#" id="forgotPasswordLink">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block ripple">
+                    Login
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Signup Form -->
+            <form class="auth-form hidden" id="signupForm">
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" class="input-field" placeholder="Full Name" id="signupName" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" class="input-field" placeholder="Email" id="signupEmail" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" class="input-field" placeholder="Password" id="signupPassword" required>
+                    <i class="fas fa-eye toggle-password" id="toggleSignupPassword"></i>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block ripple">
+                    Create Account
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Google Signup Stub -->
+            <div class="divider">
+                <span>or</span>
+            </div>
+            <button class="btn btn-google ripple" id="googleSignupBtn">
+                <i class="fab fa-google"></i>
+                Continue with Google
+            </button>
+
+            <!-- Toggle Auth Mode -->
+            <div class="auth-toggle">
+                <p id="toggleText">Don't have an account? <a href="#" id="toggleAuthMode">Sign up</a></p>
+            </div>
+        </div>
+
+        <!-- Forgot Password Modal -->
+        <div class="modal hidden" id="forgotPasswordModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Reset Password</h3>
+                    <button class="close-modal" id="closeForgotModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Enter your email to receive password reset instructions.</p>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" class="input-field" placeholder="Email" id="resetEmail" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary ripple" id="cancelResetBtn">Cancel</button>
+                    <button class="btn btn-primary ripple" id="sendResetBtn">Send Reset Link</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="glow-orb glow-orb-1"></div>
+        <div class="glow-orb glow-orb-2"></div>
+    </div>
+
+    <script src="assets/js/common.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+
+</html>
