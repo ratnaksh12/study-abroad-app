@@ -3,9 +3,21 @@ const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
+require('dotenv').config();
+
 const app = express();
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3001;
+
+console.log('🚀 Server starting...');
+console.log('DATABASE_URL configured:', !!process.env.DATABASE_URL);
+
+// Test database connection on startup
+prisma.$connect()
+    .then(() => console.log('✅ Prisma connected to PostgreSQL successfully'))
+    .catch(err => {
+        console.error('❌ Prisma Connection ERROR during startup:', err);
+    });
 
 // Middleware
 app.use(cors());
@@ -300,11 +312,36 @@ app.post('/api/user/:uid/tasks', async (req, res) => {
 
 // Health check
 app.get('/health', async (req, res) => {
-    const uniCount = await prisma.university.count();
-    res.json({
-        status: 'ok',
-        message: 'University API with PostgreSQL is running',
-        totalUniversities: uniCount
+    try {
+        const uniCount = await prisma.university.count();
+        res.json({
+            status: 'ok',
+            message: 'University API with PostgreSQL is running',
+            totalUniversities: uniCount,
+            env: process.env.NODE_ENV
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: 'Health check failed - Prisma/DB issue',
+            error: error.message
+        });
+    }
+});
+
+// Simple ping test (no DB)
+app.get('/ping', (req, res) => {
+    res.json({ status: 'pong', timestamp: new Date().toISOString() });
+});
+
+// Global error handler
+app.use((err, req, res, next) => {
+    console.error('💥 GLOBAL UNHANDLED ERROR:', err);
+    res.status(500).json({
+        success: false,
+        message: 'Internal Application Error',
+        error: err.message,
+        path: req.path
     });
 });
 
