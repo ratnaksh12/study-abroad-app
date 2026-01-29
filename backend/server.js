@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
+require('dotenv').config();
 
 const app = express();
 const prisma = new PrismaClient();
@@ -53,9 +54,11 @@ app.get('/api/universities', async (req, res) => {
         }
 
         if (field) {
-            where.programs = { hasSome: [field] };
-            // Note: Simplistic mapping for now, can be expanded like offersProgram if needed
+            const fields = Array.isArray(field) ? field : [field];
+            where.programs = { hasSome: fields };
         }
+
+        console.log('[API] University search filters:', JSON.stringify(where));
 
         const universities = await prisma.university.findMany({
             where,
@@ -69,8 +72,13 @@ app.get('/api/universities', async (req, res) => {
             universities
         });
     } catch (error) {
-        console.error('Error fetching universities:', error);
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        console.error('❌ Error fetching universities:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 });
 
