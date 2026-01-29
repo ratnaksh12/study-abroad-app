@@ -8,13 +8,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     const currentUser = localStorage.getItem('currentUser');
     const currentUID = localStorage.getItem('currentUID');
 
-    if (!currentUID) {
+    let userData = null;
+
+    // If we have a UID, fetch the latest from cloud
+    if (currentUID) {
+        userData = await fetchUserRemote(currentUID);
+    } else {
+        // Fallback to local data
+        userData = getCurrentUser();
+    }
+
+    if (!userData) {
         window.location.href = 'auth.html';
         return;
     }
-
-    // Fetch latest user data from cloud
-    const userData = await fetchUserRemote(currentUID);
 
     // Check onboarding
     if (!checkOnboardingComplete()) return;

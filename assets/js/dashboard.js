@@ -8,22 +8,23 @@ document.addEventListener('DOMContentLoaded', async function () {
     const currentUser = localStorage.getItem('currentUser');
     const currentUID = localStorage.getItem('currentUID');
 
-    if (!currentUID) {
-        // Fallback or re-auth if UID missing
-        console.warn('CurrentUID missing, redirecting to auth');
-        window.location.href = 'auth.html';
-        return;
+    let userData = null;
+
+    // If we have a UID, fetch the latest from cloud
+    if (currentUID) {
+        console.log('Fetching remote user state for UID:', currentUID);
+        userData = await fetchUserRemote(currentUID);
+    } else {
+        // Fallback to local data for Email/Password users (local-only)
+        console.log('No currentUID found, using local data for:', currentUser);
+        userData = getCurrentUser();
     }
 
-    // Show loading state (Optional: could add a spinner)
-    console.log('Fetching remote user state...');
-
-    // Fetch latest user data from PostgreSQL
-    const userData = await fetchUserRemote(currentUID);
-
     if (!userData) {
-        console.error('Failed to load user data from cloud');
-        // Handle error - maybe show offline mode or retry
+        console.error('Failed to load user data');
+        // If no user data at all, redirect to login
+        window.location.href = 'auth.html';
+        return;
     }
 
     // Check onboarding after we have the data
