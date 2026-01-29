@@ -228,8 +228,10 @@ app.get('/health', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
-    console.log(`🎓 University API running on http://localhost:${PORT}`);
+const HOST = '0.0.0.0'; // Important for cloud deployments
+app.listen(PORT, HOST, () => {
+    console.log(`🎓 University API running on http://${HOST}:${PORT}`);
     console.log(`📊 Loaded ${universitiesData.universities.length} universities`);
     console.log(`🌍 Covering ${[...new Set(universitiesData.universities.map(u => u.country))].length} countries`);
 });
+
