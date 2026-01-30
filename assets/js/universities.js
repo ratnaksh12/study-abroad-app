@@ -4,17 +4,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Check authentication
     if (!requireAuth()) return;
 
-    // Get current user and UID
     const currentUser = localStorage.getItem('currentUser');
     const currentUID = localStorage.getItem('currentUID');
-
     let userData = null;
 
-    // If we have a UID, fetch the latest from cloud
     if (currentUID) {
         userData = await fetchUserRemote(currentUID);
-    } else {
-        // Fallback to local data
+    }
+
+    if (!userData) {
         userData = getCurrentUser();
     }
 
@@ -26,8 +24,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Check onboarding
     if (!checkOnboardingComplete()) return;
 
-    const universityGrid = document.getElementById('universityGrid');
-    const filterTabs = document.querySelectorAll('.filter-tab');
+    const universityGrid = document.getElementById('universityGrid'); // Original
+    const universityList = document.getElementById('universityList'); // New from instruction
+    const shortlistedList = document.getElementById('shortlistedList'); // New from instruction
+    const filterTabs = document.querySelectorAll('.filter-tab'); // Original
     const lockBtn = document.getElementById('lockUniversitiesBtn');
     const backBtn = document.getElementById('backBtn');
     const filterBtn = document.getElementById('filterBtn');

@@ -63,29 +63,53 @@ async function saveUserRemote(uid, data) {
     }
 }
 
-// Get user data (legacy wrapper - returns cached or null)
+// Helper to get active UID
+function getActiveUID() {
+    return localStorage.getItem('currentUID');
+}
+
+// Get user data (UID-aware)
 function getUserData(email) {
-    // If we have a global UID, we should use it. 
-    // This function is still used by auth.js for email lookup.
+    const uid = getActiveUID();
+
+    // 1. Try UID-specific storage first
+    if (uid) {
+        const uidData = localStorage.getItem(`user_data_${uid}`);
+        if (uidData) return JSON.parse(uidData);
+    }
+
+    // 2. Fallback to legacy email-based storage
     const users = JSON.parse(localStorage.getItem('users') || '{}');
     return users[email] || null;
 }
 
-// Save user data (legacy wrapper - also triggers remote sync if uid present)
+// Save user data (UID-aware + triggers remote sync)
 async function saveUserData(email, data, options = {}) {
-    console.log(`[Global Save] Saving data for ${email}.`);
+    console.log(`[Global Save] Saving data for ${email}. UID:`, getActiveUID());
 
     // Auto-deduplicate shortlist
     if (data.shortlistedUniversities) {
         data.shortlistedUniversities = cleanShortlist(data.shortlistedUniversities);
     }
 
-    const users = JSON.parse(localStorage.getItem('users') || '{}');
-    users[email] = data;
-    localStorage.setItem('users', JSON.stringify(users));
+    const uid = getActiveUID();
+
+    // Save to local storage
+    if (uid) {
+        // UID-specific storage for isolation
+        localStorage.setItem(`user_data_${uid}`, JSON.stringify(data));
+        // Keep email map for legacy lookups
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        users[email] = data;
+        localStorage.setItem('users', JSON.stringify(users));
+    } else {
+        // Fallback for legacy local users without UIDs
+        const users = JSON.parse(localStorage.getItem('users') || '{}');
+        users[email] = data;
+        localStorage.setItem('users', JSON.stringify(users));
+    }
 
     // Remote sync if we have a UID stored
-    const uid = localStorage.getItem('currentUID');
     if (uid) {
         await saveUserRemote(uid, data);
     }
@@ -381,6 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
 // Logout function
 function logout() {
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUID');
     window.location.href = 'index.html';
 }
 

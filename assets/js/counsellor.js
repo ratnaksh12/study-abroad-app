@@ -1,12 +1,25 @@
-// AI Counsellor Logic with Rule-Based Responses
-
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     // Check authentication and onboarding
     if (!requireAuth()) return;
     if (!checkOnboardingComplete()) return;
 
     const currentUser = localStorage.getItem('currentUser');
-    let userData = getUserData(currentUser);
+    const currentUID = localStorage.getItem('currentUID');
+    let userData = null;
+
+    // Initialization
+    if (currentUID) {
+        userData = await fetchUserRemote(currentUID);
+    }
+
+    if (!userData) {
+        userData = getUserData(currentUser);
+    }
+
+    if (!userData) {
+        window.location.href = 'auth.html';
+        return;
+    }
 
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
@@ -14,16 +27,27 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearChatBtn = document.getElementById('clearChatBtn');
     const backBtn = document.getElementById('backBtn');
 
+    // Restore chat history from fresh data
+    renderChatHistory();
+
+    function renderChatHistory() {
+        chatMessages.innerHTML = '';
+        if (userData.chatHistory && userData.chatHistory.length > 0) {
+            userData.chatHistory.forEach(msg => {
+                if (msg.type === 'user') addUserMessage(msg.text, false);
+                else addAIMessage(msg.text, false, false); // Don't save again when rendering!
+            });
+        }
+    }
+
     // Action handler
     window.handleChatAction = function (action, id, name) {
         // Reload fresh userData to avoid stale data
         const currentUser = localStorage.getItem('currentUser');
         const freshData = getUserData(currentUser);
-        // Update properties of the shared object instead of reassigning the variable
-        // This avoids "Assignment to constant variable" errors if cached as const
         Object.assign(userData, freshData);
+
         console.log('[Chat Action] Action:', action, 'ID:', id, 'Name:', name);
-        console.log('[Chat Action] Current shortlist before action:', userData.shortlistedUniversities);
 
         let text = '';
         if (action === 'shortlist') {
@@ -81,20 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Load chat history
-    if (!userData.chatHistory) {
-        userData.chatHistory = [];
-        saveUserData(currentUser, userData);
-    } else {
-        // Restore chat history
-        userData.chatHistory.forEach(msg => {
-            if (msg.type === 'user') {
-                addUserMessage(msg.text, false);
-            } else {
-                addAIMessage(msg.text, false);
-            }
-        });
-    }
+
 
     // Suggestion chips
     document.querySelectorAll('.suggestion-chip').forEach(chip => {

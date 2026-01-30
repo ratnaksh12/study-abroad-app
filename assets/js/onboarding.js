@@ -5,7 +5,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!requireAuth()) return;
 
     const currentUserEmail = localStorage.getItem('currentUser');
-    const user = getUserData(currentUserEmail);
+    const currentUID = localStorage.getItem('currentUID');
+    let user = null;
+
+    if (currentUID) {
+        user = await fetchUserRemote(currentUID);
+    }
+
+    if (!user) {
+        user = getUserData(currentUserEmail);
+    }
+
+    if (!user) {
+        window.location.href = 'auth.html';
+        return;
+    }
+
     if (user.profileComplete) {
         window.location.href = 'dashboard.html';
         return;

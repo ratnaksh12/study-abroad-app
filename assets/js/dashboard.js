@@ -38,8 +38,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const welcomeHeading = document.querySelector('.welcome-section h1');
     welcomeHeading.innerHTML = `Welcome back, <span class="highlight" id="userName">${userName}</span>`;
 
-    // CRITICAL: Force sync of Tasks with Profile Data
-    // This ensures legacy tasks or unsynced profile changes are caught immediately on load
+    // CRITICAL: Force sync and local cache update
     generateTasks(userData);
     saveUserData(currentUser, userData);
 

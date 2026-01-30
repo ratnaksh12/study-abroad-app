@@ -4,17 +4,15 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Check authentication
     if (!requireAuth()) return;
 
-    // Get current user and UID
     const currentUser = localStorage.getItem('currentUser');
     const currentUID = localStorage.getItem('currentUID');
-
     let userData = null;
 
-    // If we have a UID, fetch the latest from cloud
     if (currentUID) {
         userData = await fetchUserRemote(currentUID);
-    } else {
-        // Fallback to local data
+    }
+
+    if (!userData) {
         userData = getCurrentUser();
     }
 

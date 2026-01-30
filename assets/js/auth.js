@@ -90,7 +90,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Set current user and redirect
+        // Important: set UID for isolation
         localStorage.setItem('currentUser', email);
+        const localUid = 'local_' + btoa(email).substring(0, 15);
+        localStorage.setItem('currentUID', localUid);
 
         if (userData.profileComplete) {
             // Mark that user has logged in (no longer first time)
@@ -134,8 +137,10 @@ document.addEventListener('DOMContentLoaded', function () {
             tasks: []
         };
 
+        const localUid = 'local_' + btoa(email).substring(0, 15);
         saveUserData(email, newUser);
         localStorage.setItem('currentUser', email);
+        localStorage.setItem('currentUID', localUid);
 
         // Redirect to onboarding
         window.location.href = 'onboarding.html';
