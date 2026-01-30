@@ -219,21 +219,31 @@ function calculateProfileStrength(userData) {
     }
     if (userData.profile?.sopStatus === 'completed') score += weights.exams * 0.1;
 
-    // Additional completeness - CHECK TASK COMPLETION, not just data
-    // Only award points if the associated task is marked complete
+    // Additional completeness - DATA-DRIVEN SCORING (Trusted Source)
+    // We check the ACTUAL count. If count > 0, we award points representing the task being "done".
+    // This ensures that un-shortlisting (count -> 0) immediately removes the points.
+
+    const hasShortlisted = userData.shortlistedUniversities && userData.shortlistedUniversities.length > 0;
+    const hasLocked = userData.lockedUniversities && userData.lockedUniversities.length > 0;
+
+    // Check tasks for UI consistency, but score is based on reality
     const shortlistTask = userData.tasks ? userData.tasks.find(t => t.id === 'shortlist_task') : null;
     const lockTask = userData.tasks ? userData.tasks.find(t => t.id === 'lock_final_list') : null;
 
-    if (shortlistTask && shortlistTask.completed) {
-        score += weights.additional * 0.4;
-    }
-    if (lockTask && lockTask.completed) {
+    // Shortlist Points: 15% * 0.4 = 6 points
+    if (hasShortlisted) {
         score += weights.additional * 0.4;
     }
 
-    // Award remaining points for having started the process
-    if (userData.shortlistedUniversities?.length > 0 && !shortlistTask?.completed) {
-        score += weights.additional * 0.1; // Partial credit
+    // Lock Points: 15% * 0.4 = 6 points
+    if (hasLocked) {
+        score += weights.additional * 0.4;
+    }
+
+    // Remaining 10% (1.5 pts) - Just a small bonus for having "started" if valid
+    // Only if not already fully rewarded above (logic kept from original but simplified)
+    if (hasShortlisted && !hasLocked) {
+        score += weights.additional * 0.1;
     }
 
     // Task Completion Bonus

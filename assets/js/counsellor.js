@@ -31,8 +31,34 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!userData.shortlistedUniversities.includes(id)) {
                 userData.shortlistedUniversities.push(id);
                 console.log('[Chat Action] Added to shortlist. New shortlist:', userData.shortlistedUniversities);
+
+                // --- TASK SYNC START ---
+                if (!userData.tasks) userData.tasks = [];
+                let shortlistTask = userData.tasks.find(t => t.id === 'shortlist_task');
+
+                if (!shortlistTask) {
+                    shortlistTask = {
+                        id: 'shortlist_task',
+                        title: 'Shortlist Universities',
+                        description: 'Shortlist 8-12 universities for your application',
+                        priority: 'high',
+                        completed: false
+                    };
+                    userData.tasks.push(shortlistTask);
+                }
+
+                // Set true if > 0
+                shortlistTask.completed = userData.shortlistedUniversities.length > 0;
+                // --- TASK SYNC END ---
+
                 saveUserData(currentUser, userData);  // Auto-deduplicates
                 console.log('[Chat Action] Saved to localStorage');
+
+                // Dispatch event so Dashboard updates strength immediately
+                window.dispatchEvent(new CustomEvent('profileUpdated', {
+                    detail: { shortlistCount: userData.shortlistedUniversities.length }
+                }));
+
                 text = `I've added ${name} to your shortlist.`;
             } else {
                 console.log('[Chat Action] Already in shortlist');

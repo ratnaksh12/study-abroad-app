@@ -91,6 +91,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
     }
 
+    // Initial display
+    displayProfileStrength(userData);
+
+    // Listen for profile updates from other components (Universities, AI Chat)
+    window.addEventListener('profileUpdated', function () {
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            const freshData = getUserData(currentUser);
+            displayProfileStrength(freshData);
+        }
+    });
+
     function displayProfileStrength(userData) {
         const score = calculateProfileStrength(userData);
         const strengthInfo = getProfileStrengthLabel(score);

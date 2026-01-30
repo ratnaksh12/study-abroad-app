@@ -233,6 +233,31 @@ document.addEventListener('DOMContentLoaded', async function () {
             userData.shortlistedUniversities = userData.shortlistedUniversities.filter(id => id !== uniId);
         }
 
+        // --- TASK SYNC START ---
+        // Ensure "Shortlist Universities" task reflects actual state (>0 items)
+        if (!userData.tasks) userData.tasks = [];
+        let shortlistTask = userData.tasks.find(t => t.id === 'shortlist_task');
+
+        // Create if missing
+        if (!shortlistTask) {
+            shortlistTask = {
+                id: 'shortlist_task',
+                title: 'Shortlist Universities',
+                description: 'Shortlist 8-12 universities for your application',
+                priority: 'high',
+                completed: false
+            };
+            userData.tasks.push(shortlistTask);
+        }
+
+        // Set completed if ANY universities are shortlisted
+        // This ensures un-shortlisting below 1 reversibly un-completes the task
+        const hasUnis = userData.shortlistedUniversities.length > 0;
+        if (shortlistTask.completed !== hasUnis) {
+            shortlistTask.completed = hasUnis;
+        }
+        // --- TASK SYNC END ---
+
         // Save to localStorage (primary source of truth)
         await saveUserData(currentUser, userData);
 
@@ -247,6 +272,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Update UI
         displayUniversities();
         updateCounts();
+
+        // Notify other pages (Dashboard) to update Profile Strength immediately
+        window.dispatchEvent(new CustomEvent('profileUpdated', {
+            detail: { shortlistCount: userData.shortlistedUniversities.length }
+        }));
     }
 
     async function toggleLock(uniId) {
