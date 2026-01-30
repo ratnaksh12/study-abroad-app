@@ -26,8 +26,8 @@ async function fetchUserRemote(uid) {
             let remoteUser = result.user;
 
             // Ensure critical arrays exist
-            remoteUser.shortlistedUniversities = remoteUser.shortlistedUniversities || [];
-            remoteUser.lockedUniversities = remoteUser.lockedUniversities || [];
+            remoteUser.shortlistedUniversities = (remoteUser.shortlistedUniversities || []).map(String);
+            remoteUser.lockedUniversities = (remoteUser.lockedUniversities || []).map(String);
             remoteUser.tasks = remoteUser.tasks || [];
 
             // Parse chatHistory if stored as JSON string

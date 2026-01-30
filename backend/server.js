@@ -487,65 +487,37 @@ app.put('/api/user/:uid', async (req, res) => {
             }
         }
 
-        // 2. Update shortlisted/locked universities
+        // 2. Update shortlisted/locked universities (Unified Sync)
         if (userData.shortlistedUniversities || userData.lockedUniversities) {
             try {
-                // Clear existing shortlists for this user
+                // Clear existing shortlists for this user to rebuild based on fresh state
                 await prisma.userUniversity.deleteMany({ where: { userId: uid } });
 
-                // Re-add shortlisted
-                if (userData.shortlistedUniversities && userData.shortlistedUniversities.length > 0) {
-                    const shortlistData = userData.shortlistedUniversities
-                        .map(uniId => {
-                            const parsed = typeof uniId === 'string' ? parseInt(uniId, 10) : uniId;
-                            if (isNaN(parsed)) {
-                                console.warn(`[PUT /api/user/${uid}] Invalid university ID: ${uniId}`);
-                                return null;
-                            }
-                            return {
-                                userId: uid,
-                                universityId: parsed,
-                                isLocked: false
-                            };
-                        })
-                        .filter(Boolean);
+                const shortlistedIds = Array.isArray(userData.shortlistedUniversities) ? userData.shortlistedUniversities : [];
+                const lockedIds = Array.isArray(userData.lockedUniversities) ? userData.lockedUniversities : [];
 
-                    if (shortlistData.length > 0) {
-                        await prisma.userUniversity.createMany({
-                            data: shortlistData,
-                            skipDuplicates: true
-                        });
-                    }
+                // Combine and deduplicate IDs
+                const allUniIds = [...new Set([...shortlistedIds, ...lockedIds])];
+
+                if (allUniIds.length > 0) {
+                    const universityData = allUniIds.map(id => {
+                        const uniId = String(id);
+                        return {
+                            userId: uid,
+                            universityId: uniId,
+                            isLocked: lockedIds.includes(id) // It's locked if it's in the lockedIds list
+                        };
+                    });
+
+                    await prisma.userUniversity.createMany({
+                        data: universityData,
+                        skipDuplicates: true
+                    });
+
+                    console.log(`[PUT /api/user/${uid}] Unified university sync: ${allUniIds.length} total, ${lockedIds.length} locked`);
                 }
-
-                // Re-add locked
-                if (userData.lockedUniversities && userData.lockedUniversities.length > 0) {
-                    const lockedData = userData.lockedUniversities
-                        .map(uniId => {
-                            const parsed = typeof uniId === 'string' ? parseInt(uniId, 10) : uniId;
-                            if (isNaN(parsed)) {
-                                console.warn(`[PUT /api/user/${uid}] Invalid locked university ID: ${uniId}`);
-                                return null;
-                            }
-                            return {
-                                userId: uid,
-                                universityId: parsed,
-                                isLocked: true
-                            };
-                        })
-                        .filter(Boolean);
-
-                    if (lockedData.length > 0) {
-                        await prisma.userUniversity.createMany({
-                            data: lockedData,
-                            skipDuplicates: true
-                        });
-                    }
-                }
-                console.log(`[PUT /api/user/${uid}] Universities synced: ${userData.shortlistedUniversities?.length || 0} shortlisted, ${userData.lockedUniversities?.length || 0} locked`);
             } catch (univError) {
                 console.error(`[PUT /api/user/${uid}] Universities sync failed:`, univError.message);
-                // Continue with other syncs
             }
         }
 

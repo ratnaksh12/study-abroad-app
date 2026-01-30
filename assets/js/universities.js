@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
 
             let fetchedUniversities = data.universities.map(uni => ({
-                id: uni.id,
+                id: String(uni.id),
                 name: uni.name,
                 location: uni.location,
                 country: uni.country,
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             filteredUniversities = results.filter(r => r.success).map(r => {
                 const uni = r.university;
                 return {
-                    id: uni.id,
+                    id: String(uni.id),
                     name: uni.name,
                     location: uni.location,
                     country: uni.country,
@@ -222,8 +222,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         filteredUniversities.forEach(uni => {
-            const isShortlisted = userData.shortlistedUniversities.includes(uni.id);
-            const isLocked = userData.lockedUniversities.includes(uni.id);
+            const isShortlisted = userData.shortlistedUniversities.includes(String(uni.id));
+            const isLocked = userData.lockedUniversities.includes(String(uni.id));
 
             const card = document.createElement('div');
             card.className = 'university-card';
@@ -256,6 +256,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function toggleShortlist(uniId) {
+        uniId = String(uniId);
         const isCurrentlyShortlisted = userData.shortlistedUniversities.includes(uniId);
 
         // Update local data immediately (local-first)
@@ -312,6 +313,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function toggleLock(uniId) {
+        uniId = String(uniId);
         const isCurrentlyLocked = userData.lockedUniversities.includes(uniId);
 
         if (isCurrentlyLocked && !confirm('Unlock this university?')) return;
