@@ -174,10 +174,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             modalTitle.textContent = 'Edit Budget';
             formHTML = `
                 <div class="input-group"><label>Budget Range</label><input type="text" class="input-field" id="edit_budgetRange" value="${userData.profile.budgetRange || ''}"></div>
+                <div class="input-group"><label>Funding Plan</label><input type="text" class="input-field" id="edit_fundingPlan" value="${userData.profile.fundingPlan || ''}"></div>
             `;
         } else if (section === 'exams') {
             modalTitle.textContent = 'Edit Exams';
             formHTML = `
+                <div class="input-group"><label>English Test</label><input type="text" class="input-field" id="edit_englishTest" value="${userData.profile.englishTest || ''}" placeholder="e.g. IELTS, TOEFL"></div>
+                <div class="input-group"><label>English Score</label><input type="text" class="input-field" id="edit_englishScore" value="${userData.profile.englishScore || ''}"></div>
+                <div class="input-group"><label>Standardized Test</label><input type="text" class="input-field" id="edit_standardizedTest" value="${userData.profile.standardizedTest || ''}" placeholder="e.g. GRE, GMAT"></div>
+                <div class="input-group"><label>Test Score</label><input type="text" class="input-field" id="edit_standardizedScore" value="${userData.profile.standardizedScore || ''}"></div>
                 <div class="input-group"><label>SOP Status</label>
                     <select class="input-field" id="edit_sopStatus">
                         <option value="not-started" ${userData.profile.sopStatus === 'not-started' ? 'selected' : ''}>Not Started</option>
@@ -213,7 +218,12 @@ document.addEventListener('DOMContentLoaded', async function () {
             userData.profile.preferredCountries = document.getElementById('edit_preferredCountries').value.split(',').map(c => c.trim()).filter(c => c);
         } else if (currentSection === 'budget') {
             userData.profile.budgetRange = document.getElementById('edit_budgetRange').value;
+            userData.profile.fundingPlan = document.getElementById('edit_fundingPlan').value;
         } else if (currentSection === 'exams') {
+            userData.profile.englishTest = document.getElementById('edit_englishTest').value;
+            userData.profile.englishScore = document.getElementById('edit_englishScore').value;
+            userData.profile.standardizedTest = document.getElementById('edit_standardizedTest').value;
+            userData.profile.standardizedScore = document.getElementById('edit_standardizedScore').value;
             userData.profile.sopStatus = document.getElementById('edit_sopStatus').value;
         }
 
