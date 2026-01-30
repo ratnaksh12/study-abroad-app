@@ -405,20 +405,24 @@ function generateTasks(userData) {
     // We do NOT filter them out based on profile data anymore.
 
     // English Test Task
+    // Sync logic: If user entered a test type (and not 'none'), task is complete.
+    const hasEnglishTest = userData.profile.englishTest && userData.profile.englishTest !== 'none';
     tasks.push({
         title: 'Take English Proficiency Test',
         description: 'Register for IELTS/TOEFL',
         priority: 'high',
-        completed: false, // Default to false, let merge logic update it
+        completed: hasEnglishTest,
         id: 'eng_test'
     });
 
     // SOP Task
+    // Sync logic: If status is 'completed', task is complete.
+    const hasSOP = userData.profile.sopStatus === 'completed';
     tasks.push({
         title: 'Write Statement of Purpose',
         description: 'Draft your SOP',
         priority: 'high',
-        completed: false,
+        completed: hasSOP,
         id: 'sop_task'
     });
 
@@ -455,21 +459,21 @@ function generateTasks(userData) {
     }
 
     // Merge with existing task status from userData
-    // EXCEPT for shortlist and lock tasks - these should ALWAYS use calculated status
+    // EXCEPT for shortlist, lock, english test, and sop tasks - these should ALWAYS use calculated status (Trusted Source)
     if (userData.tasks && userData.tasks.length > 0) {
         tasks.forEach(t => {
             const existing = userData.tasks.find(ut => ut.id === t.id);
             if (existing) {
-                // For shortlist and lock tasks, always use the freshly calculated completion status
+                // For these trusted tasks, always use the freshly calculated completion status from above
                 // For other tasks, use the stored completion status
-                if (t.id !== 'shortlist_task' && t.id !== 'lock_final_list') {
+                if (t.id !== 'shortlist_task' && t.id !== 'lock_final_list' && t.id !== 'eng_test' && t.id !== 'sop_task') {
                     t.completed = existing.completed;
                 }
             }
         });
     }
 
-    // Update userData.tasks to reflect the current calculated status for shortlist and lock tasks
+    // Update userData.tasks to reflect the current calculated status for trusted source tasks
     if (!userData.tasks) userData.tasks = [];
 
     // Update or add shortlist task
@@ -491,6 +495,28 @@ function generateTasks(userData) {
             userData.tasks[lockTaskIndex].completed = lockTask.completed;
         } else {
             userData.tasks.push(lockTask);
+        }
+    }
+
+    // Update or add English test task
+    const engTestTaskIndex = userData.tasks.findIndex(t => t.id === 'eng_test');
+    const engTestTask = tasks.find(t => t.id === 'eng_test');
+    if (engTestTask) {
+        if (engTestTaskIndex >= 0) {
+            userData.tasks[engTestTaskIndex].completed = engTestTask.completed;
+        } else {
+            userData.tasks.push(engTestTask);
+        }
+    }
+
+    // Update or add SOP task
+    const sopTaskIndex = userData.tasks.findIndex(t => t.id === 'sop_task');
+    const sopTask = tasks.find(t => t.id === 'sop_task');
+    if (sopTask) {
+        if (sopTaskIndex >= 0) {
+            userData.tasks[sopTaskIndex].completed = sopTask.completed;
+        } else {
+            userData.tasks.push(sopTask);
         }
     }
 
