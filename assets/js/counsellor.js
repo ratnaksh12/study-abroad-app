@@ -292,15 +292,31 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Profile analysis
         if (lowerMessage.includes('profile') || lowerMessage.includes('strength') || lowerMessage.includes('analyze')) {
-            const score = calculateProfileStrength(userData);
+            // CRITICAL: Reload user data to ensure we use the latest state
+            // This matches the pattern used in the rest of generateAIResponse
+            const currentUser = localStorage.getItem('currentUser');
+            const currentUID = localStorage.getItem('currentUID');
+            let freshUserData = null;
+
+            // Fetch the most recent data (same logic as top of page)
+            if (currentUID) {
+                freshUserData = await fetchUserRemote(currentUID);
+            }
+
+            if (!freshUserData) {
+                freshUserData = getUserData(currentUser);
+            }
+
+            // Use fresh data for calculation to ensure sync with dashboard
+            const score = calculateProfileStrength(freshUserData);
             const strengthInfo = getProfileStrengthLabel(score);
-            const tips = generateProfileTips(userData);
+            const tips = generateProfileTips(freshUserData);
 
             let response = `Your profile strength is <strong>${score}%</strong> - ${strengthInfo.label}. Here's what I found:\n\n`;
             response += `<strong>Strengths:</strong>\n`;
-            if (userData.profile.gpa) response += `✓ Strong GPA of ${userData.profile.gpa}\n`;
-            if (userData.profile.englishScore) response += `✓ English proficiency test completed\n`;
-            if (userData.profile.sopStatus === 'completed') response += `✓ SOP ready\n`;
+            if (freshUserData.profile.gpa) response += `✓ Strong GPA of ${freshUserData.profile.gpa}\n`;
+            if (freshUserData.profile.englishScore) response += `✓ English proficiency test completed\n`;
+            if (freshUserData.profile.sopStatus === 'completed') response += `✓ SOP ready\n`;
 
             response += `\n<strong>Areas to improve:</strong>\n`;
             tips.forEach(tip => {

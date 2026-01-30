@@ -501,6 +501,8 @@ function generateTasks(userData) {
 
 
     // Stage 4: Application (Only if Locked)
+    // CRITICAL: These tasks must be generated every time with stable IDs
+    // They will be synced to userData.tasks below to ensure persistence
     if (stage === 'apply') {
         tasks.push({ title: 'Order Official Transcripts', description: 'Request from your high school/college', priority: 'high', completed: false, id: 'transcripts' });
         tasks.push({ title: 'Request Letters of Recommendation', description: 'Contact 2-3 professors', priority: 'high', completed: false, id: 'lors' });
@@ -514,7 +516,7 @@ function generateTasks(userData) {
             const existing = userData.tasks.find(ut => ut.id === t.id);
             if (existing) {
                 // For these trusted tasks, always use the freshly calculated completion status from above
-                // For other tasks, use the stored completion status
+                // For other tasks (including application stage tasks), use the stored completion status
                 if (t.id !== 'shortlist_task' && t.id !== 'lock_final_list' && t.id !== 'eng_test' && t.id !== 'sop_task') {
                     t.completed = existing.completed;
                 }
