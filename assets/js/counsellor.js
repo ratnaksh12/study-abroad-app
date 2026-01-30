@@ -72,12 +72,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function attachSuggestionListeners() {
+        console.log('Counsellor: Attaching suggestion listeners...');
         document.querySelectorAll('.suggestion-chip').forEach(btn => {
+            // Defensive check to prevent double attachment
+            if (btn.dataset.listenerAttached === 'true') return;
+
             btn.addEventListener('click', function () {
                 const text = this.dataset.suggestion;
                 chatInput.value = text;
                 sendMessage();
             });
+
+            btn.dataset.listenerAttached = 'true';
         });
     }
 
