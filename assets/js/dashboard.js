@@ -212,7 +212,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 if (task.id === 'lock_final_list' || task.id === 'shortlist_task') {
                     window.location.href = 'universities.html';
                 } else if (['sop_task', 'eng_test'].includes(task.id)) {
-                    window.location.href = 'profile.html';
+                    // Direct user to the specific section to update status
+                    window.location.href = 'profile.html?open=exams';
                 } else {
                     const isComplete = !task.completed;
                     task.completed = isComplete;

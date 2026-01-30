@@ -438,6 +438,8 @@ app.put('/api/user/:uid', async (req, res) => {
         // 1. Update Profile (if provided) - USE UPSERT to handle missing profiles
         if (userData.profile) {
             try {
+                console.log(`[PUT /api/user/${uid}] Syncing profile. SOP Status: ${userData.profile.sopStatus}`);
+
                 await prisma.profile.upsert({
                     where: { userId: uid },
                     update: {
@@ -478,7 +480,7 @@ app.put('/api/user/:uid', async (req, res) => {
                         sopStatus: userData.profile.sopStatus
                     }
                 });
-                console.log(`[PUT /api/user/${uid}] Profile synced successfully`);
+                console.log(`[PUT /api/user/${uid}] Profile synced successfully. Saved SOP: ${userData.profile.sopStatus}`);
             } catch (profileError) {
                 console.error(`[PUT /api/user/${uid}] Profile sync failed:`, profileError.message);
                 // Continue with other syncs even if profile fails

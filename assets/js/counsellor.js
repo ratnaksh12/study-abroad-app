@@ -31,13 +31,54 @@ document.addEventListener('DOMContentLoaded', async function () {
     renderChatHistory();
 
     function renderChatHistory() {
-        chatMessages.innerHTML = '';
+        const welcomeMsgHTML = `
+            <div class="message ai welcome-message">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">
+                    <h3>Welcome! I'm your AI Study Abroad Counsellor 🎓</h3>
+                    <p>I can help you with:</p>
+                    <ul>
+                        <li>Finding the perfect universities based on your profile</li>
+                        <li>Understanding your strengths and areas to improve</li>
+                        <li>Creating personalized tasks and action plans</li>
+                        <li>Answering questions about the application process</li>
+                    </ul>
+                    <p>Ask me anything or try these suggestions:</p>
+                    <div class="quick-suggestions">
+                        <button class="suggestion-chip ripple" data-suggestion="What universities match my profile?"><i class="fas fa-university"></i> Recommend universities</button>
+                        <button class="suggestion-chip ripple" data-suggestion="What should I work on next?"><i class="fas fa-tasks"></i> Next steps</button>
+                        <button class="suggestion-chip ripple" data-suggestion="Analyze my profile strength"><i class="fas fa-chart-line"></i> Profile analysis</button>
+                    </div>
+                </div>
+            </div>`;
+
+        chatMessages.innerHTML = welcomeMsgHTML;
+
         if (userData.chatHistory && userData.chatHistory.length > 0) {
             userData.chatHistory.forEach(msg => {
+                // If we have history, we might want to hide the welcome message or keep it.
+                // User said "Not disappear". So we keep it.
                 if (msg.type === 'user') addUserMessage(msg.text, false);
-                else addAIMessage(msg.text, false, false); // Don't save again when rendering!
+                else addAIMessage(msg.text, false, false);
             });
+            // Scroll to bottom if history exists
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+
+        // Re-attach suggestion listeners
+        attachSuggestionListeners();
+    }
+
+    function attachSuggestionListeners() {
+        document.querySelectorAll('.suggestion-chip').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const text = this.dataset.suggestion;
+                chatInput.value = text;
+                sendMessage();
+            });
+        });
     }
 
     // Action handler

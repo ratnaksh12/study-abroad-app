@@ -259,5 +259,17 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     backBtn.addEventListener('click', () => window.location.href = 'dashboard.html');
     logoutBtn.addEventListener('click', () => { if (confirm('Logout?')) logout(); });
+
+    // Check for "open" query param to auto-open sections (e.g., from Dashboard tasks)
+    const urlParams = new URLSearchParams(window.location.search);
+    const sectionToOpen = urlParams.get('open');
+    if (sectionToOpen) {
+        // Find the edit button for this section and click it
+        const editBtn = document.querySelector(`.edit-section-btn[data-section="${sectionToOpen}"]`);
+        if (editBtn) {
+            // Small delay to ensure data is ready (though DOMContentLoaded should be fine)
+            setTimeout(() => editBtn.click(), 100);
+        }
+    }
 });
 
