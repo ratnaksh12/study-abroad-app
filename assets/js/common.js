@@ -514,6 +514,11 @@ function generateTasks(userData) {
         const existingLors = userData.tasks ? userData.tasks.find(t => t.id === 'lors') : null;
         const existingApply = userData.tasks ? userData.tasks.find(t => t.id === 'apply_online') : null;
 
+        console.log('[generateTasks] Existing task status BEFORE generation:');
+        console.log('  - transcripts:', existingTranscripts?.completed);
+        console.log('  - lors:', existingLors?.completed);
+        console.log('  - apply_online:', existingApply?.completed);
+
         tasks.push({
             title: 'Order Official Transcripts',
             description: 'Request from your high school/college',
@@ -535,6 +540,8 @@ function generateTasks(userData) {
             completed: existingApply ? existingApply.completed : false,
             id: 'apply_online'
         });
+
+        console.log('[generateTasks] Tasks AFTER generation:', tasks.slice(-3).map(t => ({ id: t.id, completed: t.completed })));
     }
 
     // Merge with existing task status from userData

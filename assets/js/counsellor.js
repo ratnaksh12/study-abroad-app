@@ -307,6 +307,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                 freshUserData = getUserData(currentUser);
             }
 
+            // CRITICAL: Regenerate tasks to sync "trusted source" tasks (like dashboard does)
+            // This ensures shortlist_task, lock_final_list, eng_test, sop_task have correct completion status
+            if (freshUserData) {
+                generateTasks(freshUserData);
+            }
+
             // Use fresh data for calculation to ensure sync with dashboard
             const score = calculateProfileStrength(freshUserData);
             const strengthInfo = getProfileStrengthLabel(score);
