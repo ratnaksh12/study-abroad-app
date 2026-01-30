@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // CRITICAL: Force sync and local cache update
     generateTasks(userData);
-    saveUserData(currentUser, userData);
+    await saveUserData(currentUser, userData);
 
     // Initialize UI
     displayProfileStrength(userData);
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     displayTasks(userData);
 
     // Initial check (sync frontend logic tasks with profile data)
-    checkTaskCompletion(userData);
+    await checkTaskCompletion(userData);
 
     // Refresh buttons
     document.getElementById('refreshStrengthBtn').addEventListener('click', function () {
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     document.getElementById('refreshTodoBtn').addEventListener('click', async function () {
         const updatedUser = await fetchUserRemote(currentUID);
-        checkTaskCompletion(updatedUser);
+        await checkTaskCompletion(updatedUser);
         displayTasks(updatedUser);
     });
 
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (confirm('Do you want to logout?')) logout();
     });
 
-    function checkTaskCompletion(userData) {
+    async function checkTaskCompletion(userData) {
         let changed = false;
         if (userData.profile && userData.profile.sopStatus === 'completed') {
             const sopTask = userData.tasks.find(t => t.title.includes('Statement of Purpose'));
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
         }
         if (changed) {
-            saveUserData(currentUser, userData);
+            await saveUserData(currentUser, userData);
         }
     }
 
@@ -225,8 +225,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                     if (existingIndex > -1) userData.tasks[existingIndex].completed = isComplete;
                     else userData.tasks.push(task);
 
-                    // Sync to cloud
-                    saveUserData(currentUser, userData);
+                    // Sync to cloud - AWAIT to ensure persistence
+                    await saveUserData(currentUser, userData);
                     displayProfileStrength(userData);
                 }
             });
