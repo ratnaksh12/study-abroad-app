@@ -273,103 +273,180 @@ app.post('/api/user/:uid/profile', async (req, res) => {
 // Used by saveUserRemote for comprehensive sync
 // =================================================================
 app.put('/api/user/:uid', async (req, res) => {
-    try {
-        const { uid } = req.params;
-        const userData = req.body;
+    const { uid } = req.params;
+    const userData = req.body;
 
-        // 1. Update Profile (if provided)
+    console.log(`[PUT /api/user/${uid}] Starting comprehensive sync...`);
+
+    try {
+        // 1. Update Profile (if provided) - USE UPSERT to handle missing profiles
         if (userData.profile) {
-            await prisma.profile.update({
-                where: { userId: uid },
-                data: {
-                    educationLevel: userData.profile.educationLevel,
-                    degreeMajor: userData.profile.degreeMajor,
-                    graduationYear: userData.profile.graduationYear,
-                    gpa: userData.profile.gpa,
-                    intendedDegree: userData.profile.intendedDegree,
-                    fieldOfStudy: userData.profile.fieldOfStudy,
-                    intakeYear: userData.profile.intakeYear,
-                    intakeSeason: userData.profile.intakeSeason,
-                    preferredCountries: userData.profile.preferredCountries,
-                    budgetRange: userData.profile.budgetRange,
-                    fundingPlan: userData.profile.fundingPlan,
-                    englishTest: userData.profile.englishTest,
-                    englishScore: userData.profile.englishScore,
-                    standardizedTest: userData.profile.standardizedTest,
-                    standardizedScore: userData.profile.standardizedScore,
-                    sopStatus: userData.profile.sopStatus
-                }
-            });
+            try {
+                await prisma.profile.upsert({
+                    where: { userId: uid },
+                    update: {
+                        educationLevel: userData.profile.educationLevel,
+                        degreeMajor: userData.profile.degreeMajor,
+                        graduationYear: userData.profile.graduationYear,
+                        gpa: userData.profile.gpa,
+                        intendedDegree: userData.profile.intendedDegree,
+                        fieldOfStudy: userData.profile.fieldOfStudy,
+                        intakeYear: userData.profile.intakeYear,
+                        intakeSeason: userData.profile.intakeSeason,
+                        preferredCountries: userData.profile.preferredCountries,
+                        budgetRange: userData.profile.budgetRange,
+                        fundingPlan: userData.profile.fundingPlan,
+                        englishTest: userData.profile.englishTest,
+                        englishScore: userData.profile.englishScore,
+                        standardizedTest: userData.profile.standardizedTest,
+                        standardizedScore: userData.profile.standardizedScore,
+                        sopStatus: userData.profile.sopStatus
+                    },
+                    create: {
+                        userId: uid,
+                        educationLevel: userData.profile.educationLevel,
+                        degreeMajor: userData.profile.degreeMajor,
+                        graduationYear: userData.profile.graduationYear,
+                        gpa: userData.profile.gpa,
+                        intendedDegree: userData.profile.intendedDegree,
+                        fieldOfStudy: userData.profile.fieldOfStudy,
+                        intakeYear: userData.profile.intakeYear,
+                        intakeSeason: userData.profile.intakeSeason,
+                        preferredCountries: userData.profile.preferredCountries,
+                        budgetRange: userData.profile.budgetRange,
+                        fundingPlan: userData.profile.fundingPlan,
+                        englishTest: userData.profile.englishTest,
+                        englishScore: userData.profile.englishScore,
+                        standardizedTest: userData.profile.standardizedTest,
+                        standardizedScore: userData.profile.standardizedScore,
+                        sopStatus: userData.profile.sopStatus
+                    }
+                });
+                console.log(`[PUT /api/user/${uid}] Profile synced successfully`);
+            } catch (profileError) {
+                console.error(`[PUT /api/user/${uid}] Profile sync failed:`, profileError.message);
+                // Continue with other syncs even if profile fails
+            }
         }
 
         // 2. Update shortlisted/locked universities
         if (userData.shortlistedUniversities || userData.lockedUniversities) {
-            // Clear existing shortlists for this user
-            await prisma.userUniversity.deleteMany({ where: { userId: uid } });
+            try {
+                // Clear existing shortlists for this user
+                await prisma.userUniversity.deleteMany({ where: { userId: uid } });
 
-            // Re-add shortlisted
-            if (userData.shortlistedUniversities && userData.shortlistedUniversities.length > 0) {
-                await prisma.userUniversity.createMany({
-                    data: userData.shortlistedUniversities.map(uniId => ({
-                        userId: uid,
-                        universityId: parseInt(uniId),
-                        isLocked: false
-                    })),
-                    skipDuplicates: true
-                });
-            }
+                // Re-add shortlisted
+                if (userData.shortlistedUniversities && userData.shortlistedUniversities.length > 0) {
+                    const shortlistData = userData.shortlistedUniversities
+                        .map(uniId => {
+                            const parsed = typeof uniId === 'string' ? parseInt(uniId, 10) : uniId;
+                            if (isNaN(parsed)) {
+                                console.warn(`[PUT /api/user/${uid}] Invalid university ID: ${uniId}`);
+                                return null;
+                            }
+                            return {
+                                userId: uid,
+                                universityId: parsed,
+                                isLocked: false
+                            };
+                        })
+                        .filter(Boolean);
 
-            // Re-add locked
-            if (userData.lockedUniversities && userData.lockedUniversities.length > 0) {
-                await prisma.userUniversity.createMany({
-                    data: userData.lockedUniversities.map(uniId => ({
-                        userId: uid,
-                        universityId: parseInt(uniId),
-                        isLocked: true
-                    })),
-                    skipDuplicates: true
-                });
+                    if (shortlistData.length > 0) {
+                        await prisma.userUniversity.createMany({
+                            data: shortlistData,
+                            skipDuplicates: true
+                        });
+                    }
+                }
+
+                // Re-add locked
+                if (userData.lockedUniversities && userData.lockedUniversities.length > 0) {
+                    const lockedData = userData.lockedUniversities
+                        .map(uniId => {
+                            const parsed = typeof uniId === 'string' ? parseInt(uniId, 10) : uniId;
+                            if (isNaN(parsed)) {
+                                console.warn(`[PUT /api/user/${uid}] Invalid locked university ID: ${uniId}`);
+                                return null;
+                            }
+                            return {
+                                userId: uid,
+                                universityId: parsed,
+                                isLocked: true
+                            };
+                        })
+                        .filter(Boolean);
+
+                    if (lockedData.length > 0) {
+                        await prisma.userUniversity.createMany({
+                            data: lockedData,
+                            skipDuplicates: true
+                        });
+                    }
+                }
+                console.log(`[PUT /api/user/${uid}] Universities synced: ${userData.shortlistedUniversities?.length || 0} shortlisted, ${userData.lockedUniversities?.length || 0} locked`);
+            } catch (univError) {
+                console.error(`[PUT /api/user/${uid}] Universities sync failed:`, univError.message);
+                // Continue with other syncs
             }
         }
 
         // 3. Update tasks
         if (userData.tasks && userData.tasks.length > 0) {
-            for (const task of userData.tasks) {
-                await prisma.task.upsert({
-                    where: { id: task.id },
-                    update: {
-                        completed: task.completed,
-                        title: task.title,
-                        description: task.description,
-                        priority: task.priority
-                    },
-                    create: {
-                        id: task.id,
-                        userId: uid,
-                        title: task.title,
-                        description: task.description,
-                        priority: task.priority,
-                        completed: task.completed
-                    }
-                });
+            try {
+                for (const task of userData.tasks) {
+                    await prisma.task.upsert({
+                        where: { id: task.id },
+                        update: {
+                            completed: task.completed,
+                            title: task.title,
+                            description: task.description,
+                            priority: task.priority
+                        },
+                        create: {
+                            id: task.id,
+                            userId: uid,
+                            title: task.title,
+                            description: task.description,
+                            priority: task.priority,
+                            completed: task.completed
+                        }
+                    });
+                }
+                console.log(`[PUT /api/user/${uid}] Tasks synced: ${userData.tasks.length} tasks`);
+            } catch (taskError) {
+                console.error(`[PUT /api/user/${uid}] Tasks sync failed:`, taskError.message);
+                // Continue
             }
         }
 
         // 4. Update chatHistory (store as JSON in user table)
         if (userData.chatHistory !== undefined) {
-            await prisma.user.update({
-                where: { id: uid },
-                data: {
-                    chatHistory: JSON.stringify(userData.chatHistory),
-                    profileComplete: userData.profileComplete !== undefined ? userData.profileComplete : true
-                }
-            });
+            try {
+                await prisma.user.update({
+                    where: { id: uid },
+                    data: {
+                        chatHistory: JSON.stringify(userData.chatHistory),
+                        profileComplete: userData.profileComplete !== undefined ? userData.profileComplete : true
+                    }
+                });
+                console.log(`[PUT /api/user/${uid}] Chat history synced: ${userData.chatHistory?.length || 0} messages`);
+            } catch (chatError) {
+                console.error(`[PUT /api/user/${uid}] Chat history sync failed:`, chatError.message);
+                // Continue
+            }
         }
 
+        console.log(`[PUT /api/user/${uid}] ✅ Sync completed successfully`);
         res.json({ success: true, message: 'User data fully synced' });
     } catch (error) {
-        console.error('Error in PUT /api/user/:uid:', error);
-        res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+        console.error(`[PUT /api/user/${uid}] ❌ FATAL ERROR:`, error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 });
 

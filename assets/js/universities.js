@@ -23,33 +23,56 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Initialize universities (async)
     async function init() {
-        console.log('[Universities] Syncing remote state & initializing...');
+        try {
+            console.log('[Universities] Syncing remote state & initializing...');
 
-        // 1. Prioritize remote data if UID exists
-        if (currentUID) {
-            const remoteData = await fetchUserRemote(currentUID);
-            if (remoteData) {
-                userData = remoteData;
+            // 1. Prioritize remote data if UID exists
+            if (currentUID) {
+                const remoteData = await fetchUserRemote(currentUID);
+                if (remoteData) {
+                    userData = remoteData;
+                    console.log('[Universities] Remote data loaded successfully');
+                } else {
+                    console.warn('[Universities] Remote fetch failed, falling back to local');
+                }
             }
+
+            // 2. Final fallback
+            if (!userData) {
+                userData = getCurrentUser();
+            }
+
+            if (!userData) {
+                console.error('[Universities] No user data available, redirecting to auth');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            // Ensure critical arrays exist
+            userData.shortlistedUniversities = userData.shortlistedUniversities || [];
+            userData.lockedUniversities = userData.lockedUniversities || [];
+
+            console.log(`[Universities] User data ready. Shortlisted: ${userData.shortlistedUniversities.length}, Locked: ${userData.lockedUniversities.length}`);
+
+            // 3. Populate universities list
+            universities = await generateUniversities(userData);
+
+            if (!universities || universities.length === 0) {
+                console.warn('[Universities] No universities generated');
+                universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">No universities found. Please check your profile settings.</p>';
+                return;
+            }
+
+            console.log(`[Universities] Generated ${universities.length} universities`);
+
+            // 4. Render UI
+            displayUniversities();
+            updateCounts();
+            updateLockSection();
+        } catch (error) {
+            console.error('[Universities] CRITICAL ERROR in init():', error);
+            universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-error); grid-column: 1/-1;">Failed to load universities. Please refresh the page.</p>';
         }
-
-        // 2. Final fallback
-        if (!userData) {
-            userData = getCurrentUser();
-        }
-
-        if (!userData) {
-            window.location.href = 'auth.html';
-            return;
-        }
-
-        // 3. Populate universities list
-        universities = await generateUniversities(userData);
-
-        // 4. Render UI
-        displayUniversities();
-        updateCounts();
-        updateLockSection();
     }
 
     // Start initialization
@@ -331,6 +354,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     function updateLockSection() {
         const lockSection = document.getElementById('lockSection');
         if (!lockSection) return;
+
+        // Defensive check: ensure userData exists
+        if (!userData || !userData.lockedUniversities) {
+            console.warn('[Universities] updateLockSection called but userData is not ready');
+            lockSection.style.display = 'none';
+            return;
+        }
 
         lockSection.style.display = 'flex';
         const isInApplyStage = userData.lockedUniversities.length > 0;
