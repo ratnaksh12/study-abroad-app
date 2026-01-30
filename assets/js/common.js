@@ -261,14 +261,27 @@ function calculateProfileStrength(userData) {
     let finalScore = Math.min(Math.round(score), 100);
 
     // CRITICAL: Prevent 100% if required tasks are not done
+    // CRITICAL: Prevent 100% if required tasks are not done
     // User Requirement: "Profile Strength must not reach 100% unless all required To-Do tasks are completed."
-    const requiredTaskIds = ['shortlist_task', 'lock_final_list']; // Add others if strictly required
+    const requiredTaskIds = ['shortlist_task', 'lock_final_list', 'eng_test']; // Added eng_test per user request
     const missingRequired = requiredTaskIds.some(reqId => {
+        // Special check for English Test: If user explicitly selected 'none' or 'waived', it might not be required?
+        // But user reported "Complete your English proficiency test" appearing, so it IS required for them.
+
         const task = userData.tasks ? userData.tasks.find(t => t.id === reqId) : null;
+
         // Check finding: task must exist AND be completed
         // For shortlist/lock, we also double-check the DATA truth just to be safe
         if (reqId === 'shortlist_task' && (!hasShortlisted)) return true;
         if (reqId === 'lock_final_list' && (!hasLocked)) return true;
+
+        // For English Test, check profile data too
+        if (reqId === 'eng_test') {
+            const hasEnglishData = userData.profile?.englishTest && userData.profile.englishTest !== 'none';
+            if (!hasEnglishData) return true; // Missing data = incomplete
+            // If data exists, we trust it, even if task might be desynced (though we prefer task sync)
+            if (hasEnglishData) return false;
+        }
 
         return !task || !task.completed;
     });
