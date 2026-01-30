@@ -231,23 +231,31 @@ document.addEventListener('DOMContentLoaded', async function () {
             if (isLocked) card.classList.add('locked');
 
             card.innerHTML = `
-                <div class="category-badge ${uni.category}">${uni.category}</div>
-                <div class="university-logo"><i class="fas fa-university"></i></div>
-                <h3 class="university-name">${uni.name}</h3>
-                <div class="university-location"><i class="fas fa-map-marker-alt"></i> ${uni.location}</div>
-                <div class="university-stats">
-                    <div class="stat-item"><div class="stat-label">Acceptance</div><div class="stat-value">${uni.acceptanceRate}</div></div>
-                    <div class="stat-item"><div class="stat-label">Your Chance</div><div class="stat-value">${uni.acceptanceChance}</div></div>
-                </div>
-                <div class="university-actions">
-                    <button class="btn btn-secondary btn-shortlist ${isShortlisted ? 'active' : ''}" data-id="${uni.id}">
-                        <i class="fas fa-star"></i> ${isShortlisted ? 'Shortlisted' : 'Shortlist'}
-                    </button>
-                    <button class="btn btn-secondary btn-lock ${isLocked ? 'active' : ''}" data-id="${uni.id}">
-                        <i class="fas ${isLocked ? 'fa-lock' : 'fa-lock-open'}"></i> ${isLocked ? 'Locked' : 'Lock'}
-                    </button>
-                </div>
-            `;
+            <div class="category-badge ${uni.category}">${uni.category}</div>
+            <div class="university-logo"><i class="fas fa-university"></i></div>
+            <h3 class="university-name">${uni.name}</h3>
+            <div class="university-location"><i class="fas fa-map-marker-alt"></i> ${uni.location}</div>
+            <div class="university-stats">
+                <div class="stat-item"><div class="stat-label">Acceptance Rate</div><div class="stat-value">${uni.acceptanceRate}</div></div>
+                <div class="stat-item"><div class="stat-label">Your Chance</div><div class="stat-value">${uni.acceptanceChance}</div></div>
+            </div>
+            <div class="university-cost">
+                <div class="cost-label">Est. Cost</div>
+                <div class="cost-value">${uni.cost}</div>
+            </div>
+            <div class="university-match">
+                <div class="match-label">Why this matches you:</div>
+                <div class="match-reason">${uni.reason}</div>
+            </div>
+            <div class="university-actions">
+                <button class="btn btn-secondary btn-shortlist ${isShortlisted ? 'active' : ''}" data-id="${uni.id}">
+                    <i class="fas fa-star"></i> ${isShortlisted ? 'Shortlisted' : 'Shortlist'}
+                </button>
+                <button class="btn btn-secondary btn-lock ${isLocked ? 'active' : ''}" data-id="${uni.id}">
+                    <i class="fas ${isLocked ? 'fa-lock' : 'fa-lock-open'}"></i> ${isLocked ? 'Locked' : 'Lock'}
+                </button>
+            </div>
+        `;
             universityGrid.appendChild(card);
         });
 

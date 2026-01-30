@@ -187,6 +187,48 @@
     color: var(--accent-orange);
 }
 
+.university-cost {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: var(--bg-elevated);
+    border-radius: var(--radius-sm);
+}
+
+.cost-label {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+}
+
+.cost-value {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--accent-orange);
+    text-align: right;
+}
+
+.university-match {
+    padding: var(--spacing-md);
+    background: rgba(99, 102, 241, 0.1);
+    border-left: 3px solid var(--accent-purple);
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-lg);
+}
+
+.match-label {
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--accent-purple);
+    margin-bottom: var(--spacing-xs);
+}
+
+.match-reason {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
 .university-reason {
     padding: var(--spacing-md);
     background: var(--bg-elevated);
