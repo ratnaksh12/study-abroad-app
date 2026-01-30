@@ -255,7 +255,9 @@ app.post('/api/auth/signup', async (req, res) => {
         }
 
         // Generate unique UID for email/password users
-        const uid = 'local_' + btoa(email).substring(0, 15) + '_' + Date.now();
+        // Use Buffer (Node.js standard) and replace unsafe URL chars (+ and /)
+        const safeEmailBase64 = Buffer.from(email).toString('base64').replace(/[+/=]/g, '');
+        const uid = 'local_' + safeEmailBase64.substring(0, 15) + '_' + Date.now();
 
         // Create user in database
         const newUser = await prisma.user.create({
