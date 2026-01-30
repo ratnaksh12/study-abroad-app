@@ -63,19 +63,24 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Fetch real universities from backend API
     async function generateUniversities(userData, activeFilters = null) {
-        const preferredCountries = activeFilters && activeFilters.countries.length > 0
-            ? activeFilters.countries
-            : (userData.profile.preferredCountries || []);
+        // ALWAYS use Study Goals countries unless explicitly overridden by user
+        // activeFilters.countries can be undefined (not set), empty array (user chose none), or populated
+        const preferredCountries = activeFilters?.countries !== undefined
+            ? activeFilters.countries  // User explicitly chose via filter (could be empty for "all")
+            : (userData.profile.preferredCountries || []);  // Default to Study Goals
 
         const field = userData.profile.fieldOfStudy || '';
 
         try {
             const params = new URLSearchParams();
+
+            // Only add country filters if we have countries to filter by
             if (preferredCountries.length > 0) {
                 preferredCountries.forEach(country => {
                     if (country !== 'Other') params.append('country', country);
                 });
             }
+
             if (field) params.append('field', field);
 
             const response = await fetch(`${API_BASE_URL}/universities?${params.toString()}`);
@@ -84,8 +89,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             const data = await response.json();
 
             if (!data.success || data.universities.length === 0) {
-                // Fallback to all universities
-                const allResponse = await fetch(`${API_BASE_URL}/universities`);
+                // If no results, try without field filter
+                const fallbackParams = new URLSearchParams();
+                if (preferredCountries.length > 0) {
+                    preferredCountries.forEach(country => {
+                        if (country !== 'Other') fallbackParams.append('country', country);
+                    });
+                }
+
+                const allResponse = await fetch(`${API_BASE_URL}/universities?${fallbackParams.toString()}`);
                 const allData = await allResponse.json();
                 if (allData.success) {
                     data.universities = allData.universities;
@@ -145,15 +157,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (currentFilter === 'shortlisted') {
             universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Loading shortlisted...</p>';
 
-            // Re-sync with latest userData to get current shortlist
-            const latestUser = await fetchUserRemote(currentUID);
-            const shortlistIds = latestUser.shortlistedUniversities || [];
+            // Use local userData for shortlist (works for all users)
+            const shortlistIds = userData.shortlistedUniversities || [];
 
             if (shortlistIds.length === 0) {
                 universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">No shortlisted universities.</p>';
                 return;
             }
 
+            // Fetch full university details from backend
             const promises = shortlistIds.map(id => fetch(`${API_BASE_URL}/universities/${id}`).then(res => res.json()));
             const results = await Promise.all(promises);
 
@@ -213,37 +225,60 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     async function toggleShortlist(uniId) {
         const isCurrentlyShortlisted = userData.shortlistedUniversities.includes(uniId);
-        const action = isCurrentlyShortlisted ? 'remove' : 'add';
 
-        const success = await toggleUniversityRemote(uniId, action);
-        if (success) {
-            if (action === 'add') userData.shortlistedUniversities.push(uniId);
-            else userData.shortlistedUniversities = userData.shortlistedUniversities.filter(id => id !== uniId);
-
-            displayUniversities();
-            updateCounts();
+        // Update local data immediately (local-first)
+        if (!isCurrentlyShortlisted) {
+            userData.shortlistedUniversities.push(uniId);
+        } else {
+            userData.shortlistedUniversities = userData.shortlistedUniversities.filter(id => id !== uniId);
         }
+
+        // Save to localStorage (primary source of truth)
+        await saveUserData(currentUser, userData);
+
+        // Attempt remote sync only if user has UID (optional, non-blocking)
+        if (currentUID) {
+            const action = isCurrentlyShortlisted ? 'remove' : 'add';
+            toggleUniversityRemote(uniId, action).catch(err =>
+                console.warn('Remote sync failed (non-critical):', err)
+            );
+        }
+
+        // Update UI
+        displayUniversities();
+        updateCounts();
     }
 
     async function toggleLock(uniId) {
         const isCurrentlyLocked = userData.lockedUniversities.includes(uniId);
-        const action = isCurrentlyLocked ? 'remove' : 'add';
 
         if (isCurrentlyLocked && !confirm('Unlock this university?')) return;
 
-        const success = await toggleUniversityRemote(uniId, 'add', !isCurrentlyLocked);
-        if (success) {
-            if (!isCurrentlyLocked) {
-                if (!userData.shortlistedUniversities.includes(uniId)) userData.shortlistedUniversities.push(uniId);
-                userData.lockedUniversities.push(uniId);
-            } else {
-                userData.lockedUniversities = userData.lockedUniversities.filter(id => id !== uniId);
+        // Update local data immediately (local-first)
+        if (!isCurrentlyLocked) {
+            // Auto-shortlist when locking
+            if (!userData.shortlistedUniversities.includes(uniId)) {
+                userData.shortlistedUniversities.push(uniId);
             }
-
-            displayUniversities();
-            updateCounts();
-            updateLockSection();
+            userData.lockedUniversities.push(uniId);
+        } else {
+            userData.lockedUniversities = userData.lockedUniversities.filter(id => id !== uniId);
         }
+
+        // Save to localStorage (primary source of truth)
+        await saveUserData(currentUser, userData);
+
+        // Attempt remote sync only if user has UID (optional, non-blocking)
+        if (currentUID) {
+            toggleUniversityRemote(uniId, 'add', !isCurrentlyLocked).catch(err =>
+                console.warn('Remote sync failed (non-critical):', err)
+            );
+        }
+
+        // Update UI
+        displayUniversities();
+        updateCounts();
+        updateLockSection();
     }
 
     function updateCounts() {
@@ -484,18 +519,19 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Reset Filters
     resetFiltersBtn.addEventListener('click', async function () {
+        // Reset to Study Goals defaults (not empty/all)
         activeFilters = {
-            countries: [],
+            countries: userData.profile.preferredCountries || [],
             maxBudget: 100000
         };
 
         // Restore to default (Profile prefs)
-        universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Reseting results...</p>';
+        universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Resetting to your Study Goals...</p>';
         universities = await generateUniversities(userData);
         budgetRange.value = 100000;
         updateBudgetValue(100000);
 
-        // Uncheck all boxes
+        // Uncheck all boxes (will be rechecked if needed when filter modal reopens)
         document.querySelectorAll('#countryFilters input').forEach(cb => {
             cb.checked = false;
             cb.parentElement.classList.remove('checked');
