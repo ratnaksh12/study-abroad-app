@@ -297,11 +297,17 @@ function calculateProfileStrength(userData) {
     // Task Completion Bonus
     // Check for specific application tasks
     if (userData.tasks) {
-        const completedTasks = userData.tasks.filter(t => t.completed).length;
-        if (completedTasks > 0) {
+        const completedTasks = userData.tasks.filter(t => t.completed);
+        const completedCount = completedTasks.length;
+
+        console.log('[Profile Strength Debug] Completed tasks:', completedTasks.map(t => t.id));
+        console.log('[Profile Strength Debug] Completed count:', completedCount);
+
+        if (completedCount > 0) {
             // Allocate remaining 20% of 'additional' weight + bonus
-            const taskBonus = Math.min(completedTasks * 3, 15); // Increased bonus weight
+            const taskBonus = Math.min(completedCount * 3, 15); // Increased bonus weight
             score += taskBonus;
+            console.log('[Profile Strength Debug] Task bonus added:', taskBonus);
         }
     }
 
@@ -501,12 +507,34 @@ function generateTasks(userData) {
 
 
     // Stage 4: Application (Only if Locked)
-    // CRITICAL: These tasks must be generated every time with stable IDs
-    // They will be synced to userData.tasks below to ensure persistence
+    // CRITICAL: Check if these tasks already exist in userData.tasks to preserve completion status
     if (stage === 'apply') {
-        tasks.push({ title: 'Order Official Transcripts', description: 'Request from your high school/college', priority: 'high', completed: false, id: 'transcripts' });
-        tasks.push({ title: 'Request Letters of Recommendation', description: 'Contact 2-3 professors', priority: 'high', completed: false, id: 'lors' });
-        tasks.push({ title: 'Start Online Applications', description: 'Creating accounts on university portals', priority: 'critical', completed: false, id: 'apply_online' });
+        // Check existing tasks in userData for completion status
+        const existingTranscripts = userData.tasks ? userData.tasks.find(t => t.id === 'transcripts') : null;
+        const existingLors = userData.tasks ? userData.tasks.find(t => t.id === 'lors') : null;
+        const existingApply = userData.tasks ? userData.tasks.find(t => t.id === 'apply_online') : null;
+
+        tasks.push({
+            title: 'Order Official Transcripts',
+            description: 'Request from your high school/college',
+            priority: 'high',
+            completed: existingTranscripts ? existingTranscripts.completed : false,
+            id: 'transcripts'
+        });
+        tasks.push({
+            title: 'Request Letters of Recommendation',
+            description: 'Contact 2-3 professors',
+            priority: 'high',
+            completed: existingLors ? existingLors.completed : false,
+            id: 'lors'
+        });
+        tasks.push({
+            title: 'Start Online Applications',
+            description: 'Creating accounts on university portals',
+            priority: 'critical',
+            completed: existingApply ? existingApply.completed : false,
+            id: 'apply_online'
+        });
     }
 
     // Merge with existing task status from userData
