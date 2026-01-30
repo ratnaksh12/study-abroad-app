@@ -148,14 +148,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
 
-    // Suggestion chips
-    document.querySelectorAll('.suggestion-chip').forEach(chip => {
-        chip.addEventListener('click', function () {
-            const suggestion = this.dataset.suggestion;
-            chatInput.value = suggestion;
-            sendMessage();
-        });
-    });
+    // Suggestion chips listeners are handled by attachSuggestionListeners() called in renderChatHistory()
 
     // Send message
     function sendMessage() {
