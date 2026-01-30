@@ -1,6 +1,8 @@
 // Authentication Logic
 import { auth, googleProvider, signInWithPopup } from './firebase-config.js';
 
+const API_BASE_URL = window.API_BASE_URL || 'https://study-abroad-app-ivfr.onrender.com/api';
+
 document.addEventListener('DOMContentLoaded', function () {
     const urlParams = new URLSearchParams(window.location.search);
     const mode = urlParams.get('mode') || 'login';

@@ -1,6 +1,6 @@
 // Onboarding Logic with Form and AI Modes
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
     // Check authentication
     if (!requireAuth()) return;
 

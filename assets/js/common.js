@@ -1,6 +1,5 @@
-// Common JavaScript Functions - Shared Across All Pages
-
 const API_BASE_URL = 'https://study-abroad-app-ivfr.onrender.com/api';
+window.API_BASE_URL = API_BASE_URL;
 
 // Initialize localStorage if not exists
 function initializeLocalStorage() {
