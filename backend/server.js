@@ -204,12 +204,16 @@ app.post('/api/user/sync', async (req, res) => {
 // EMAIL/PASSWORD AUTHENTICATION ENDPOINTS
 // =================================================================
 
-// Check if email already exists (for signup validation)
+// Check if email already exists (for signup validation - checks for existing PASSWORD-based account)
 app.get('/api/auth/check-email/:email', async (req, res) => {
     try {
         const { email } = req.params;
-        const existingUser = await prisma.user.findUnique({
-            where: { email: email.toLowerCase() }
+        // Check for existing account that has a password (local account)
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                email: { equals: email, mode: 'insensitive' }, // Case-insensitive check
+                password: { not: null }
+            }
         });
 
         res.json({
@@ -235,9 +239,12 @@ app.post('/api/auth/signup', async (req, res) => {
             });
         }
 
-        // Check if user already exists
-        const existingUser = await prisma.user.findUnique({
-            where: { email: email.toLowerCase() }
+        // Check if a password-based account already exists
+        const existingUser = await prisma.user.findFirst({
+            where: {
+                email: { equals: email, mode: 'insensitive' },
+                password: { not: null }
+            }
         });
 
         if (existingUser) {
@@ -296,9 +303,12 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Find user by email
-        const user = await prisma.user.findUnique({
-            where: { email: email.toLowerCase() },
+        // Find user by email AND password (to distinguish from Google accounts with same email)
+        const user = await prisma.user.findFirst({
+            where: {
+                email: { equals: email, mode: 'insensitive' },
+                password: { not: null }
+            },
             include: {
                 profile: true,
                 shortlistedUnis: { include: { university: true } },

@@ -26,7 +26,7 @@ model University {
 
 model User {
   id              String   @id // Firebase UID or local_[hash]
-  email           String   @unique
+  email           String   // No longer unique to allow separate Google vs Email accounts
   name            String?
   password        String?  // For email/password auth (null for Google users)
   profileComplete Boolean  @default(false)
