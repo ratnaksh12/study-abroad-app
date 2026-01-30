@@ -327,6 +327,27 @@ document.addEventListener('DOMContentLoaded', async function () {
             userData.lockedUniversities = userData.lockedUniversities.filter(id => id !== uniId);
         }
 
+        // --- TASK SYNC START ---
+        if (!userData.tasks) userData.tasks = [];
+        let lockTask = userData.tasks.find(t => t.id === 'lock_final_list');
+
+        if (!lockTask) {
+            lockTask = {
+                id: 'lock_final_list',
+                title: 'Lock Final University List',
+                description: 'Select 1-3 universities to apply to',
+                priority: 'critical',
+                completed: false
+            };
+            userData.tasks.push(lockTask);
+        }
+
+        const hasLocked = userData.lockedUniversities.length > 0;
+        if (lockTask.completed !== hasLocked) {
+            lockTask.completed = hasLocked;
+        }
+        // --- TASK SYNC END ---
+
         // Save to localStorage (primary source of truth)
         await saveUserData(currentUser, userData);
 
@@ -425,8 +446,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         window.location.href = 'guidance.html';
     });
 
-    // Initial update of lock section
-    updateLockSection();
+    // Initial update of lock section handled in init()
+
 
     function generateApplicationTasks() {
         // Add tasks for application preparation

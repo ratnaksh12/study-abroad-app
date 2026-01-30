@@ -553,10 +553,13 @@ app.put('/api/user/:uid', async (req, res) => {
         if (userData.tasks && userData.tasks.length > 0) {
             try {
                 for (const task of userData.tasks) {
+                    if (task.id === 'gmat_task') {
+                        console.log(`[PUT /api/user/${uid}] Syncing GMAT task. Completed: ${task.completed}`);
+                    }
                     await prisma.task.upsert({
                         where: { id: task.id },
                         update: {
-                            completed: task.completed,
+                            completed: !!task.completed, // Force boolean
                             title: task.title,
                             description: task.description,
                             priority: task.priority
@@ -567,7 +570,7 @@ app.put('/api/user/:uid', async (req, res) => {
                             title: task.title,
                             description: task.description,
                             priority: task.priority,
-                            completed: task.completed
+                            completed: !!task.completed // Force boolean
                         }
                     });
                 }

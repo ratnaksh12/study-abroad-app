@@ -223,6 +223,13 @@ document.addEventListener('DOMContentLoaded', function () {
 // Calculate profile strength based on user data
 function calculateProfileStrength(userData) {
     let score = 0;
+    console.log('[Profile Strength Debug]', {
+        email: userData.email,
+        gmatScore: userData.profile?.standardizedScore,
+        gmatTask: userData.tasks?.find(t => t.id === 'gmat_task')?.completed,
+        shortlistCount: userData.shortlistedUniversities?.length,
+        lockCount: userData.lockedUniversities?.length
+    });
     const weights = {
         academic: 20,
         goals: 25,
