@@ -25,9 +25,10 @@ model University {
 }
 
 model User {
-  id              String   @id // Firebase UID
+  id              String   @id // Firebase UID or local_[hash]
   email           String   @unique
   name            String?
+  password        String?  // For email/password auth (null for Google users)
   profileComplete Boolean  @default(false)
   stage           String   @default("profile")
   chatHistory     String?  // Store chat messages as JSON string

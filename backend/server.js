@@ -200,6 +200,152 @@ app.post('/api/user/sync', async (req, res) => {
     }
 });
 
+// =================================================================
+// EMAIL/PASSWORD AUTHENTICATION ENDPOINTS
+// =================================================================
+
+// Check if email already exists (for signup validation)
+app.get('/api/auth/check-email/:email', async (req, res) => {
+    try {
+        const { email } = req.params;
+        const existingUser = await prisma.user.findUnique({
+            where: { email: email.toLowerCase() }
+        });
+
+        res.json({
+            success: true,
+            exists: !!existingUser,
+            message: existingUser ? 'Email already registered' : 'Email available'
+        });
+    } catch (error) {
+        console.error('Error checking email:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
+// Email/Password Signup
+app.post('/api/auth/signup', async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Name, email, and password are required'
+            });
+        }
+
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email: email.toLowerCase() }
+        });
+
+        if (existingUser) {
+            return res.status(409).json({
+                success: false,
+                message: 'An account with this email already exists'
+            });
+        }
+
+        // Generate unique UID for email/password users
+        const uid = 'local_' + btoa(email).substring(0, 15) + '_' + Date.now();
+
+        // Create user in database
+        const newUser = await prisma.user.create({
+            data: {
+                id: uid,
+                email: email.toLowerCase(),
+                name: name,
+                password: password, // In production, hash this!
+                profileComplete: false,
+                profile: { create: {} }
+            },
+            include: {
+                profile: true,
+                tasks: true
+            }
+        });
+
+        console.log(`[Auth] New email/password user created: ${email} (UID: ${uid})`);
+
+        res.json({
+            success: true,
+            user: newUser,
+            uid: uid,
+            message: 'Account created successfully'
+        });
+    } catch (error) {
+        console.error('Error creating user:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create account',
+            error: error.message
+        });
+    }
+});
+
+// Email/Password Login
+app.post('/api/auth/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email and password are required'
+            });
+        }
+
+        // Find user by email
+        const user = await prisma.user.findUnique({
+            where: { email: email.toLowerCase() },
+            include: {
+                profile: true,
+                shortlistedUnis: { include: { university: true } },
+                tasks: true
+            }
+        });
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'No account found with this email'
+            });
+        }
+
+        // Check password (in production, use bcrypt.compare!)
+        if (user.password !== password) {
+            return res.status(401).json({
+                success: false,
+                message: 'Incorrect password'
+            });
+        }
+
+        console.log(`[Auth] User logged in: ${email} (UID: ${user.id})`);
+
+        // Transform response similar to Google auth
+        const transformedUser = {
+            ...user,
+            shortlistedUniversities: user.shortlistedUnis?.filter(u => !u.isLocked).map(u => u.universityId) || [],
+            lockedUniversities: user.shortlistedUnis?.filter(u => u.isLocked).map(u => u.universityId) || []
+        };
+
+        res.json({
+            success: true,
+            user: transformedUser,
+            uid: user.id,
+            message: 'Login successful'
+        });
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Login failed',
+            error: error.message
+        });
+    }
+});
+
 // Get full user state
 app.get('/api/user/:uid', async (req, res) => {
     try {

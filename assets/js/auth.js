@@ -71,79 +71,101 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Login form submission
-    loginForm.addEventListener('submit', function (e) {
+    loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
 
-        const userData = getUserData(email);
-
-        if (!userData) {
-            alert('No account found with this email. Please sign up first.');
-            return;
+        // Warn if another user is currently logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser && currentUser !== email) {
+            const proceed = confirm(`You are currently logged in as ${currentUser}. Logging in with a different account will log you out. Continue?`);
+            if (!proceed) return;
         }
 
-        if (userData.password !== password) {
-            alert('Incorrect password. Please try again.');
-            return;
-        }
+        try {
+            // Authenticate with backend
+            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
 
-        // Set current user and redirect
-        // Important: set UID for isolation
-        localStorage.setItem('currentUser', email);
-        const localUid = 'local_' + btoa(email).substring(0, 15);
-        localStorage.setItem('currentUID', localUid);
+            const result = await response.json();
 
-        if (userData.profileComplete) {
-            // Mark that user has logged in (no longer first time)
-            // This happens after the first successful login to dashboard from onboarding
-            if (userData.firstLogin === true) {
-                userData.firstLogin = false;
-                saveUserData(email, userData);
+            if (result.success) {
+                // Set session
+                localStorage.setItem('currentUser', email);
+                localStorage.setItem('currentUID', result.uid);
+
+                console.log(`[Auth] Login successful: ${email} (UID: ${result.uid})`);
+
+                // Redirect based on profile completion
+                if (result.user.profileComplete) {
+                    window.location.href = 'dashboard.html';
+                } else {
+                    window.location.href = 'onboarding.html';
+                }
+            } else {
+                alert(result.message || 'Login failed. Please check your credentials.');
             }
-            window.location.href = 'dashboard.html';
-        } else {
-            window.location.href = 'onboarding.html';
+        } catch (error) {
+            console.error('[Auth] Login error:', error);
+            alert('Login failed. Please check your internet connection and try again.');
         }
     });
 
     // Signup form submission
-    signupForm.addEventListener('submit', function (e) {
+    signupForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
 
-        // Check if user already exists
-        if (getUserData(email)) {
-            alert('An account with this email already exists. Please login.');
-            return;
+        // Warn if another user is currently logged in
+        const currentUser = localStorage.getItem('currentUser');
+        if (currentUser) {
+            const proceed = confirm(`You are currently logged in as ${currentUser}. Creating a new account will log you out. Continue?`);
+            if (!proceed) return;
         }
 
-        // Create new user
-        const newUser = {
-            name: name,
-            email: email,
-            password: password,
-            profileComplete: false,
-            firstLogin: true,
-            createdAt: new Date().toISOString(),
-            profile: {},
-            stage: 'profile',
-            shortlistedUniversities: [],
-            lockedUniversities: [],
-            tasks: []
-        };
+        try {
+            // Check if email already exists (backend check)
+            const checkResponse = await fetch(`${API_BASE_URL}/auth/check-email/${encodeURIComponent(email)}`);
+            const checkResult = await checkResponse.json();
 
-        const localUid = 'local_' + btoa(email).substring(0, 15);
-        saveUserData(email, newUser);
-        localStorage.setItem('currentUser', email);
-        localStorage.setItem('currentUID', localUid);
+            if (checkResult.exists) {
+                alert('An account with this email already exists. Please login instead.');
+                return;
+            }
 
-        // Redirect to onboarding
-        window.location.href = 'onboarding.html';
+            // Create account in backend
+            const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Set session
+                localStorage.setItem('currentUser', email);
+                localStorage.setItem('currentUID', result.uid);
+
+                console.log(`[Auth] Signup successful: ${email} (UID: ${result.uid})`);
+
+                // Redirect to onboarding
+                window.location.href = 'onboarding.html';
+            } else {
+                alert(result.message || 'Signup failed. Please try again.');
+            }
+        } catch (error) {
+            console.error('[Auth] Signup error:', error);
+            alert('Signup failed. Please check your internet connection and try again.');
+        }
     });
 
     // Google signup/login
