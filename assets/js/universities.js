@@ -416,9 +416,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             console.log('User confirmed, proceeding...');
             userData.stage = 'apply';
 
-            // Generate application tasks
-            generateApplicationTasks();
-
             saveUserData(currentUser, userData);
             alert('Universities finalized! Proceeding to application guidance.');
             window.location.href = 'guidance.html';
@@ -451,38 +448,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Initial update of lock section handled in init()
 
 
-    function generateApplicationTasks() {
-        // Add tasks for application preparation
-        const tasks = [
-            {
-                id: 'task_app_' + Date.now() + '_1',
-                title: 'Complete Online Applications',
-                description: 'Fill out application forms for all locked universities',
-                priority: 'high',
-                completed: false
-            },
-            {
-                id: 'task_app_' + Date.now() + '_2',
-                title: 'Request Transcripts',
-                description: 'Order official transcripts from your institution',
-                priority: 'high',
-                completed: false
-            },
-            {
-                id: 'task_app_' + Date.now() + '_3',
-                title: 'Prepare Letters of Recommendation',
-                description: 'Contact professors for recommendation letters',
-                priority: 'high',
-                completed: false
-            }
-        ];
 
-        tasks.forEach(task => {
-            if (!userData.tasks.some(t => t.title === task.title)) {
-                userData.tasks.push(task);
-            }
-        });
-    }
 
     // Back button
     backBtn.addEventListener('click', function () {

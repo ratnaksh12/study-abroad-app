@@ -569,6 +569,27 @@ function generateTasks(userData) {
         }
     }
 
+    // Explicitly sync Application Stage tasks (Stage 4)
+    // This ensures they are saved to the backend even if not clicked yet
+    const appTaskIds = ['transcripts', 'lors', 'apply_online'];
+    appTaskIds.forEach(id => {
+        const taskInUserDataIndex = userData.tasks.findIndex(t => t.id === id);
+        const taskInGenList = tasks.find(t => t.id === id);
+
+        if (taskInGenList) {
+            if (taskInUserDataIndex >= 0) {
+                // If exists, respect the 'completed' status from generateTasks (which merged from existing)
+                // Actually, for these tasks, the generateTasks logic (line 519) already set t.completed = existing.completed
+                // So we just re-verify the sync here.
+                userData.tasks[taskInUserDataIndex].completed = taskInGenList.completed;
+            } else {
+                // If not in userData.tasks yet, add it
+                userData.tasks.push(taskInGenList);
+            }
+        }
+    });
+
+
     return tasks;
 }
 
