@@ -336,7 +336,7 @@ app.post('/api/auth/login', async (req, res) => {
         // Transform response similar to Google auth
         const transformedUser = {
             ...user,
-            shortlistedUniversities: user.shortlistedUnis?.filter(u => !u.isLocked).map(u => u.universityId) || [],
+            shortlistedUniversities: user.shortlistedUnis?.map(u => u.universityId) || [],
             lockedUniversities: user.shortlistedUnis?.filter(u => u.isLocked).map(u => u.universityId) || []
         };
 
@@ -373,7 +373,7 @@ app.get('/api/user/:uid', async (req, res) => {
         // Transform shortlistedUnis to flat array for frontend compatibility
         const transformedUser = {
             ...user,
-            shortlistedUniversities: user.shortlistedUnis.filter(u => !u.isLocked).map(u => u.universityId),
+            shortlistedUniversities: user.shortlistedUnis.map(u => u.universityId),
             lockedUniversities: user.shortlistedUnis.filter(u => u.isLocked).map(u => u.universityId),
             shortlistedDetails: user.shortlistedUnis.map(u => u.university)
         };
@@ -553,19 +553,22 @@ app.put('/api/user/:uid', async (req, res) => {
             }
         }
 
-        // 4. Update chatHistory (store as JSON in user table)
-        if (userData.chatHistory !== undefined) {
+        // 4. Update chatHistory and STAGE
+        // We merged stage update here to minimize DB calls
+        if (userData.chatHistory !== undefined || userData.stage) {
             try {
+                const updateData = {};
+                if (userData.chatHistory !== undefined) updateData.chatHistory = JSON.stringify(userData.chatHistory);
+                if (userData.stage) updateData.stage = userData.stage;
+                if (userData.profileComplete !== undefined) updateData.profileComplete = userData.profileComplete;
+
                 await prisma.user.update({
                     where: { id: uid },
-                    data: {
-                        chatHistory: JSON.stringify(userData.chatHistory),
-                        profileComplete: userData.profileComplete !== undefined ? userData.profileComplete : true
-                    }
+                    data: updateData
                 });
-                console.log(`[PUT /api/user/${uid}] Chat history synced: ${userData.chatHistory?.length || 0} messages`);
-            } catch (chatError) {
-                console.error(`[PUT /api/user/${uid}] Chat history sync failed:`, chatError.message);
+                console.log(`[PUT /api/user/${uid}] User state synced (Chat/Stage/ProfileComplete)`);
+            } catch (userError) {
+                console.error(`[PUT /api/user/${uid}] User state sync failed:`, userError.message);
                 // Continue
             }
         }
