@@ -257,8 +257,27 @@ function calculateProfileStrength(userData) {
         }
     }
 
-    // Cap at 100
-    return Math.min(Math.round(score), 100);
+    // Cap at 100 but enforce critical tasks for perfection
+    let finalScore = Math.min(Math.round(score), 100);
+
+    // CRITICAL: Prevent 100% if required tasks are not done
+    // User Requirement: "Profile Strength must not reach 100% unless all required To-Do tasks are completed."
+    const requiredTaskIds = ['shortlist_task', 'lock_final_list']; // Add others if strictly required
+    const missingRequired = requiredTaskIds.some(reqId => {
+        const task = userData.tasks ? userData.tasks.find(t => t.id === reqId) : null;
+        // Check finding: task must exist AND be completed
+        // For shortlist/lock, we also double-check the DATA truth just to be safe
+        if (reqId === 'shortlist_task' && (!hasShortlisted)) return true;
+        if (reqId === 'lock_final_list' && (!hasLocked)) return true;
+
+        return !task || !task.completed;
+    });
+
+    if (missingRequired) {
+        finalScore = Math.min(finalScore, 90); // Hard cap at 90% if critical stuff missing
+    }
+
+    return finalScore;
 }
 
 // Get profile strength label
@@ -389,10 +408,10 @@ function generateTasks(userData) {
 
     // Stage 2: Discovery - Always show shortlist task
     tasks.push({
-        title: 'Shortlist 8-12 Universities',
+        title: 'Shortlist 8-12 Universities', // Title remains as guidance
         description: 'Use AI Counsellor to find matches',
         priority: 'high',
-        completed: userData.shortlistedUniversities.length >= 3,
+        completed: userData.shortlistedUniversities.length > 0, // Changed from >= 3 to > 0 per request
         id: 'shortlist_task'
     });
 
