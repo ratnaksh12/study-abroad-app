@@ -263,11 +263,8 @@ function calculateProfileStrength(userData) {
     // CRITICAL: Prevent 100% if required tasks are not done
     // CRITICAL: Prevent 100% if required tasks are not done
     // User Requirement: "Profile Strength must not reach 100% unless all required To-Do tasks are completed."
-    const requiredTaskIds = ['shortlist_task', 'lock_final_list', 'eng_test']; // Added eng_test per user request
+    const requiredTaskIds = ['shortlist_task', 'lock_final_list', 'eng_test', 'sop_task'];
     const missingRequired = requiredTaskIds.some(reqId => {
-        // Special check for English Test: If user explicitly selected 'none' or 'waived', it might not be required?
-        // But user reported "Complete your English proficiency test" appearing, so it IS required for them.
-
         const task = userData.tasks ? userData.tasks.find(t => t.id === reqId) : null;
 
         // Check finding: task must exist AND be completed
@@ -275,12 +272,10 @@ function calculateProfileStrength(userData) {
         if (reqId === 'shortlist_task' && (!hasShortlisted)) return true;
         if (reqId === 'lock_final_list' && (!hasLocked)) return true;
 
-        // For English Test, check profile data too
-        if (reqId === 'eng_test') {
-            const hasEnglishData = userData.profile?.englishTest && userData.profile.englishTest !== 'none';
-            if (!hasEnglishData) return true; // Missing data = incomplete
-            // If data exists, we trust it, even if task might be desynced (though we prefer task sync)
-            if (hasEnglishData) return false;
+        // For English Test and SOP, we now strictly trust the TASK completion status 
+        // because the user wants to "mark as completed" to see the increase.
+        if (reqId === 'eng_test' || reqId === 'sop_task') {
+            return !task || !task.completed;
         }
 
         return !task || !task.completed;
@@ -405,13 +400,27 @@ function generateTasks(userData) {
     if (!userData.shortlistedUniversities) userData.shortlistedUniversities = [];
     if (!userData.lockedUniversities) userData.lockedUniversities = [];
 
-    // Stage 1: Profile (Implicitly done if here, but check gaps)
-    if (!userData.profile.englishTest || userData.profile.englishTest === 'none') {
-        tasks.push({ title: 'Take English Proficiency Test', description: 'Register for IELTS/TOEFL', priority: 'high', completed: false, id: 'eng_test' });
-    }
-    if (userData.profile.sopStatus !== 'completed') {
-        tasks.push({ title: 'Write Statement of Purpose', description: 'Draft your SOP', priority: 'high', completed: false, id: 'sop_task' });
-    }
+    // Stage 1: Profile - ALWAYS show these tasks until completed
+    // User Requirement: "This task [English Test] must appear correctly in the To-Do list."
+    // We do NOT filter them out based on profile data anymore.
+
+    // English Test Task
+    tasks.push({
+        title: 'Take English Proficiency Test',
+        description: 'Register for IELTS/TOEFL',
+        priority: 'high',
+        completed: false, // Default to false, let merge logic update it
+        id: 'eng_test'
+    });
+
+    // SOP Task
+    tasks.push({
+        title: 'Write Statement of Purpose',
+        description: 'Draft your SOP',
+        priority: 'high',
+        completed: false,
+        id: 'sop_task'
+    });
 
     // Add GRE/GMAT task if score is missing
     if (!userData.profile.standardizedScore) {

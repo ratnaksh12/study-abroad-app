@@ -179,10 +179,27 @@ document.addEventListener('DOMContentLoaded', async function () {
         } else if (section === 'exams') {
             modalTitle.textContent = 'Edit Exams';
             formHTML = `
-                <div class="input-group"><label>English Test</label><input type="text" class="input-field" id="edit_englishTest" value="${userData.profile.englishTest || ''}" placeholder="e.g. IELTS, TOEFL"></div>
-                <div class="input-group"><label>English Score</label><input type="text" class="input-field" id="edit_englishScore" value="${userData.profile.englishScore || ''}"></div>
-                <div class="input-group"><label>Standardized Test</label><input type="text" class="input-field" id="edit_standardizedTest" value="${userData.profile.standardizedTest || ''}" placeholder="e.g. GRE, GMAT"></div>
-                <div class="input-group"><label>Test Score</label><input type="text" class="input-field" id="edit_standardizedScore" value="${userData.profile.standardizedScore || ''}"></div>
+                <div class="input-group"><label>English Test</label>
+                    <select class="input-field" id="edit_englishTest">
+                        <option value="none" ${(!userData.profile.englishTest || userData.profile.englishTest === 'none') ? 'selected' : ''}>Not taken</option>
+                        <option value="IELTS" ${userData.profile.englishTest === 'IELTS' ? 'selected' : ''}>IELTS</option>
+                        <option value="TOEFL" ${userData.profile.englishTest === 'TOEFL' ? 'selected' : ''}>TOEFL</option>
+                        <option value="PTE" ${userData.profile.englishTest === 'PTE' ? 'selected' : ''}>PTE</option>
+                        <option value="Duolingo" ${userData.profile.englishTest === 'Duolingo' ? 'selected' : ''}>Duolingo</option>
+                        <option value="Other" ${userData.profile.englishTest === 'Other' ? 'selected' : ''}>Other</option>
+                    </select>
+                </div>
+                <div class="input-group"><label>English Score</label><input type="text" class="input-field" id="edit_englishScore" value="${userData.profile.englishScore || ''}" placeholder="e.g. 7.5 or 100"></div>
+                <div class="input-group"><label>Standardized Test</label>
+                    <select class="input-field" id="edit_standardizedTest">
+                        <option value="none" ${(!userData.profile.standardizedTest || userData.profile.standardizedTest === 'none') ? 'selected' : ''}>Not taken</option>
+                        <option value="GRE" ${userData.profile.standardizedTest === 'GRE' ? 'selected' : ''}>GRE</option>
+                        <option value="GMAT" ${userData.profile.standardizedTest === 'GMAT' ? 'selected' : ''}>GMAT</option>
+                        <option value="SAT" ${userData.profile.standardizedTest === 'SAT' ? 'selected' : ''}>SAT</option>
+                        <option value="ACT" ${userData.profile.standardizedTest === 'ACT' ? 'selected' : ''}>ACT</option>
+                    </select>
+                </div>
+                <div class="input-group"><label>Test Score</label><input type="text" class="input-field" id="edit_standardizedScore" value="${userData.profile.standardizedScore || ''}" placeholder="e.g. 320 or 700"></div>
                 <div class="input-group"><label>SOP Status</label>
                     <select class="input-field" id="edit_sopStatus">
                         <option value="not-started" ${userData.profile.sopStatus === 'not-started' ? 'selected' : ''}>Not Started</option>
