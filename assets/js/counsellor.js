@@ -31,8 +31,37 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!userData.shortlistedUniversities.includes(id)) {
                 userData.shortlistedUniversities.push(id);
                 console.log('[Chat Action] Added to shortlist. New shortlist:', userData.shortlistedUniversities);
+
+                // Auto-complete shortlist task if user has 3+ universities
+                if (!userData.tasks) userData.tasks = [];
+                let shortlistTask = userData.tasks.find(t => t.id === 'shortlist_task');
+
+                if (!shortlistTask) {
+                    shortlistTask = {
+                        id: 'shortlist_task',
+                        title: 'Shortlist Universities',
+                        description: 'Shortlist at least 3 universities for your application',
+                        priority: 'high',
+                        completed: false
+                    };
+                    userData.tasks.push(shortlistTask);
+                }
+
+                // Mark as complete if user has 3+ universities
+                if (userData.shortlistedUniversities.length >= 3) {
+                    shortlistTask.completed = true;
+                } else {
+                    shortlistTask.completed = false;
+                }
+
                 saveUserData(currentUser, userData);  // Auto-deduplicates
                 console.log('[Chat Action] Saved to localStorage');
+
+                // Trigger profile strength update
+                window.dispatchEvent(new CustomEvent('profileUpdated', {
+                    detail: { shortlistCount: userData.shortlistedUniversities.length }
+                }));
+
                 text = `I've added ${name} to your shortlist.`;
             } else {
                 console.log('[Chat Action] Already in shortlist');

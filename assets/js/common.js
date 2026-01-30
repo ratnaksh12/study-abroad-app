@@ -219,22 +219,28 @@ function calculateProfileStrength(userData) {
     }
     if (userData.profile?.sopStatus === 'completed') score += weights.exams * 0.1;
 
-    // Additional completeness - CHECK TASK COMPLETION, not just data
-    // Only award points if the associated task is marked complete
+    // Additional completeness - Count-based progressive scoring
+    const shortlistCount = userData.shortlistedUniversities?.length || 0;
+    const lockedCount = userData.lockedUniversities?.length || 0;
+
+    // Shortlist scoring (max 6 points) - 1.2 points per university up to 5
+    if (shortlistCount > 0) {
+        const shortlistScore = Math.min(shortlistCount * 1.2, weights.additional * 0.4);
+        score += shortlistScore;
+    }
+
+    // Lock scoring (max 6 points) - 2 points per university up to 3
+    if (lockedCount > 0) {
+        const lockScore = Math.min(lockedCount * 2, weights.additional * 0.4);
+        score += lockScore;
+    }
+
+    // Task Completion Bonus (ADDITIONAL to count-based scoring)
     const shortlistTask = userData.tasks ? userData.tasks.find(t => t.id === 'shortlist_task') : null;
     const lockTask = userData.tasks ? userData.tasks.find(t => t.id === 'lock_final_list') : null;
 
-    if (shortlistTask && shortlistTask.completed) {
-        score += weights.additional * 0.4;
-    }
-    if (lockTask && lockTask.completed) {
-        score += weights.additional * 0.4;
-    }
-
-    // Award remaining points for having started the process
-    if (userData.shortlistedUniversities?.length > 0 && !shortlistTask?.completed) {
-        score += weights.additional * 0.1; // Partial credit
-    }
+    if (shortlistTask && shortlistTask.completed) score += 2;  // Completion bonus
+    if (lockTask && lockTask.completed) score += 2;       // Completion bonus
 
     // Task Completion Bonus
     // Check for specific application tasks
