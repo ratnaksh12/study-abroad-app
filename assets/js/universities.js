@@ -8,26 +8,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     const currentUID = localStorage.getItem('currentUID');
     let userData = null;
 
-    if (currentUID) {
-        userData = await fetchUserRemote(currentUID);
-    }
-
-    if (!userData) {
-        userData = getCurrentUser();
-    }
-
-    if (!userData) {
-        window.location.href = 'auth.html';
-        return;
-    }
-
-    // Check onboarding
-    if (!checkOnboardingComplete()) return;
-
-    const universityGrid = document.getElementById('universityGrid'); // Original
-    const universityList = document.getElementById('universityList'); // New from instruction
-    const shortlistedList = document.getElementById('shortlistedList'); // New from instruction
-    const filterTabs = document.querySelectorAll('.filter-tab'); // Original
+    const universityGrid = document.getElementById('universityGrid');
+    const filterTabs = document.querySelectorAll('.filter-tab');
     const lockBtn = document.getElementById('lockUniversitiesBtn');
     const backBtn = document.getElementById('backBtn');
     const filterBtn = document.getElementById('filterBtn');
@@ -41,8 +23,30 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     // Initialize universities (async)
     async function init() {
-        console.log('[INIT] Starting university initialization...');
+        console.log('[Universities] Syncing remote state & initializing...');
+
+        // 1. Prioritize remote data if UID exists
+        if (currentUID) {
+            const remoteData = await fetchUserRemote(currentUID);
+            if (remoteData) {
+                userData = remoteData;
+            }
+        }
+
+        // 2. Final fallback
+        if (!userData) {
+            userData = getCurrentUser();
+        }
+
+        if (!userData) {
+            window.location.href = 'auth.html';
+            return;
+        }
+
+        // 3. Populate universities list
         universities = await generateUniversities(userData);
+
+        // 4. Render UI
         displayUniversities();
         updateCounts();
         updateLockSection();
@@ -151,14 +155,19 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     async function displayUniversities() {
+        console.log('[Universities] Rendering grid. Shortlisted:', userData.shortlistedUniversities?.length, 'Locked:', userData.lockedUniversities?.length);
+
         universityGrid.innerHTML = '';
         let filteredUniversities = universities;
+
+        // Ensure arrays exist before use
+        userData.shortlistedUniversities = userData.shortlistedUniversities || [];
+        userData.lockedUniversities = userData.lockedUniversities || [];
 
         if (currentFilter === 'shortlisted') {
             universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">Loading shortlisted...</p>';
 
-            // Use local userData for shortlist (works for all users)
-            const shortlistIds = userData.shortlistedUniversities || [];
+            const shortlistIds = userData.shortlistedUniversities;
 
             if (shortlistIds.length === 0) {
                 universityGrid.innerHTML = '<p style="text-align: center; color: var(--text-secondary); grid-column: 1/-1;">No shortlisted universities.</p>';

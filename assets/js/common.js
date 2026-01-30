@@ -14,32 +14,53 @@ let g_userData = null;
 
 // Get user data from backend (Async)
 async function fetchUserRemote(uid) {
+    if (!uid) return null;
     try {
-        const response = await fetch(`${API_BASE_URL}/user/${uid}`);
+        console.log(`[Remote] Fetching fresh state for UID: ${uid}`);
+        const response = await fetch(`${API_BASE_URL}/user/${uid}?t=${Date.now()}`, {
+            cache: 'no-store',
+            headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+        });
+
         const result = await response.json();
         if (result.success) {
-            g_userData = result.user;
+            let remoteUser = result.user;
+
+            // Ensure critical arrays exist
+            remoteUser.shortlistedUniversities = remoteUser.shortlistedUniversities || [];
+            remoteUser.lockedUniversities = remoteUser.lockedUniversities || [];
+            remoteUser.tasks = remoteUser.tasks || [];
 
             // Parse chatHistory if stored as JSON string
-            if (g_userData.chatHistory && typeof g_userData.chatHistory === 'string') {
+            if (remoteUser.chatHistory && typeof remoteUser.chatHistory === 'string') {
                 try {
-                    g_userData.chatHistory = JSON.parse(g_userData.chatHistory);
+                    remoteUser.chatHistory = JSON.parse(remoteUser.chatHistory);
                 } catch (e) {
-                    g_userData.chatHistory = [];
+                    remoteUser.chatHistory = [];
                 }
-            } else if (!g_userData.chatHistory) {
-                g_userData.chatHistory = [];
+            } else if (!remoteUser.chatHistory) {
+                remoteUser.chatHistory = [];
             }
 
-            // Sync to local as backup/cache
-            localStorage.setItem(`user_cache_${uid}`, JSON.stringify(g_userData));
-            return g_userData;
+            // Important: Use the same key as saveUserData/getUserData
+            const dataKey = `user_data_${uid}`;
+            localStorage.setItem(dataKey, JSON.stringify(remoteUser));
+
+            // Also keep legacy 'users' map updated for email lookups
+            const users = JSON.parse(localStorage.getItem('users') || '{}');
+            if (remoteUser.email) {
+                users[remoteUser.email] = remoteUser;
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+
+            g_userData = remoteUser;
+            return remoteUser;
         }
     } catch (error) {
         console.error('Error fetching user from backend:', error);
-        // Fallback to cache
-        const cache = localStorage.getItem(`user_cache_${uid}`);
-        if (cache) return JSON.parse(cache);
+        // Fallback to local storage (UID-specific)
+        const local = localStorage.getItem(`user_data_${uid}`);
+        if (local) return JSON.parse(local);
     }
     return null;
 }
