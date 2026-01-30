@@ -268,6 +268,111 @@ app.post('/api/user/:uid/profile', async (req, res) => {
     }
 });
 
+// =================================================================
+// PUT: Update complete user data (profile + shortlists + tasks + chat)
+// Used by saveUserRemote for comprehensive sync
+// =================================================================
+app.put('/api/user/:uid', async (req, res) => {
+    try {
+        const { uid } = req.params;
+        const userData = req.body;
+
+        // 1. Update Profile (if provided)
+        if (userData.profile) {
+            await prisma.profile.update({
+                where: { userId: uid },
+                data: {
+                    educationLevel: userData.profile.educationLevel,
+                    degreeMajor: userData.profile.degreeMajor,
+                    graduationYear: userData.profile.graduationYear,
+                    gpa: userData.profile.gpa,
+                    intendedDegree: userData.profile.intendedDegree,
+                    fieldOfStudy: userData.profile.fieldOfStudy,
+                    intakeYear: userData.profile.intakeYear,
+                    intakeSeason: userData.profile.intakeSeason,
+                    preferredCountries: userData.profile.preferredCountries,
+                    budgetRange: userData.profile.budgetRange,
+                    fundingPlan: userData.profile.fundingPlan,
+                    englishTest: userData.profile.englishTest,
+                    englishScore: userData.profile.englishScore,
+                    standardizedTest: userData.profile.standardizedTest,
+                    standardizedScore: userData.profile.standardizedScore,
+                    sopStatus: userData.profile.sopStatus
+                }
+            });
+        }
+
+        // 2. Update shortlisted/locked universities
+        if (userData.shortlistedUniversities || userData.lockedUniversities) {
+            // Clear existing shortlists for this user
+            await prisma.userUniversity.deleteMany({ where: { userId: uid } });
+
+            // Re-add shortlisted
+            if (userData.shortlistedUniversities && userData.shortlistedUniversities.length > 0) {
+                await prisma.userUniversity.createMany({
+                    data: userData.shortlistedUniversities.map(uniId => ({
+                        userId: uid,
+                        universityId: parseInt(uniId),
+                        isLocked: false
+                    })),
+                    skipDuplicates: true
+                });
+            }
+
+            // Re-add locked
+            if (userData.lockedUniversities && userData.lockedUniversities.length > 0) {
+                await prisma.userUniversity.createMany({
+                    data: userData.lockedUniversities.map(uniId => ({
+                        userId: uid,
+                        universityId: parseInt(uniId),
+                        isLocked: true
+                    })),
+                    skipDuplicates: true
+                });
+            }
+        }
+
+        // 3. Update tasks
+        if (userData.tasks && userData.tasks.length > 0) {
+            for (const task of userData.tasks) {
+                await prisma.task.upsert({
+                    where: { id: task.id },
+                    update: {
+                        completed: task.completed,
+                        title: task.title,
+                        description: task.description,
+                        priority: task.priority
+                    },
+                    create: {
+                        id: task.id,
+                        userId: uid,
+                        title: task.title,
+                        description: task.description,
+                        priority: task.priority,
+                        completed: task.completed
+                    }
+                });
+            }
+        }
+
+        // 4. Update chatHistory (store as JSON in user table)
+        if (userData.chatHistory !== undefined) {
+            await prisma.user.update({
+                where: { id: uid },
+                data: {
+                    chatHistory: JSON.stringify(userData.chatHistory),
+                    profileComplete: userData.profileComplete !== undefined ? userData.profileComplete : true
+                }
+            });
+        }
+
+        res.json({ success: true, message: 'User data fully synced' });
+    } catch (error) {
+        console.error('Error in PUT /api/user/:uid:', error);
+        res.status(500).json({ success: false, message: 'Internal server error', error: error.message });
+    }
+});
+
 // Toggle Shortlist/Lock
 app.post('/api/user/:uid/universities', async (req, res) => {
     try {

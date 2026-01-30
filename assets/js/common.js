@@ -19,6 +19,18 @@ async function fetchUserRemote(uid) {
         const result = await response.json();
         if (result.success) {
             g_userData = result.user;
+
+            // Parse chatHistory if stored as JSON string
+            if (g_userData.chatHistory && typeof g_userData.chatHistory === 'string') {
+                try {
+                    g_userData.chatHistory = JSON.parse(g_userData.chatHistory);
+                } catch (e) {
+                    g_userData.chatHistory = [];
+                }
+            } else if (!g_userData.chatHistory) {
+                g_userData.chatHistory = [];
+            }
+
             // Sync to local as backup/cache
             localStorage.setItem(`user_cache_${uid}`, JSON.stringify(g_userData));
             return g_userData;
@@ -35,34 +47,19 @@ async function fetchUserRemote(uid) {
 // Sync user data to backend
 async function saveUserRemote(uid, data) {
     try {
-        // Sync profile
-        if (data.profile) {
-            await fetch(`${API_BASE_URL}/user/${uid}/profile`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data.profile)
-            });
-        }
+        console.log('[Remote Sync] Syncing all data for UID:', uid);
 
-        // Sync shortlist/locks
-        // This is simplified - in production we'd delta sync
-        if (data.shortlistedUniversities || data.lockedUniversities) {
-            // Note: server endpoint handles one at a time or batch
-            // For now, we'll implement a simple batch sync if needed
-        }
+        // Sync complete user object to backend
+        // This ensures ALL fields persist: profile, tasks, shortlists, locks, chatHistory, etc.
+        await fetch(`${API_BASE_URL}/user/${uid}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
 
-        // Sync tasks
-        if (data.tasks) {
-            await fetch(`${API_BASE_URL}/user/${uid}/tasks`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tasks: data.tasks })
-            });
-        }
-
-        console.log('🔄 Data synced to PostgreSQL');
+        console.log('✅ Complete user data synced to PostgreSQL');
     } catch (error) {
-        console.error('Error syncing to backend:', error);
+        console.error('❌ Error syncing to backend:', error);
     }
 }
 
