@@ -233,29 +233,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             userData.shortlistedUniversities = userData.shortlistedUniversities.filter(id => id !== uniId);
         }
 
-        // Auto-complete shortlist task if user has 3+ universities
-        if (!userData.tasks) userData.tasks = [];
-        let shortlistTask = userData.tasks.find(t => t.id === 'shortlist_task');
-
-        if (!shortlistTask) {
-            // Create the task if it doesn't exist
-            shortlistTask = {
-                id: 'shortlist_task',
-                title: 'Shortlist Universities',
-                description: 'Shortlist at least 3 universities for your application',
-                priority: 'high',
-                completed: false
-            };
-            userData.tasks.push(shortlistTask);
-        }
-
-        // Mark as complete if user has 3+ universities, incomplete if less
-        if (userData.shortlistedUniversities.length >= 3) {
-            shortlistTask.completed = true;
-        } else {
-            shortlistTask.completed = false;
-        }
-
         // Save to localStorage (primary source of truth)
         await saveUserData(currentUser, userData);
 
@@ -270,11 +247,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Update UI
         displayUniversities();
         updateCounts();
-
-        // Notify other pages that profile changed (for dashboard refresh)
-        window.dispatchEvent(new CustomEvent('profileUpdated', {
-            detail: { shortlistCount: userData.shortlistedUniversities.length }
-        }));
     }
 
     async function toggleLock(uniId) {
@@ -293,29 +265,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             userData.lockedUniversities = userData.lockedUniversities.filter(id => id !== uniId);
         }
 
-        // Auto-complete lock task if user has 3+ locked universities
-        if (!userData.tasks) userData.tasks = [];
-        let lockTask = userData.tasks.find(t => t.id === 'lock_final_list');
-
-        if (!lockTask) {
-            // Create the task if it doesn't exist
-            lockTask = {
-                id: 'lock_final_list',
-                title: 'Lock Final Universities',
-                description: 'Lock at least 3 universities to finalize your application list',
-                priority: 'high',
-                completed: false
-            };
-            userData.tasks.push(lockTask);
-        }
-
-        // Mark as complete if user has 3+ locked universities, incomplete if less
-        if (userData.lockedUniversities.length >= 3) {
-            lockTask.completed = true;
-        } else {
-            lockTask.completed = false;
-        }
-
         // Save to localStorage (primary source of truth)
         await saveUserData(currentUser, userData);
 
@@ -330,14 +279,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         displayUniversities();
         updateCounts();
         updateLockSection();
-
-        // Notify other pages that profile changed
-        window.dispatchEvent(new CustomEvent('profileUpdated', {
-            detail: {
-                shortlistCount: userData.shortlistedUniversities.length,
-                lockedCount: userData.lockedUniversities.length
-            }
-        }));
     }
 
     function updateCounts() {
